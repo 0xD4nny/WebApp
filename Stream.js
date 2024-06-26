@@ -15,6 +15,7 @@ class Stream {
 
             const mainCanvas = document.getElementById("stream");
             const mainCtx = mainCanvas.getContext("2d");
+            mainCanvas
 
             mainCtx.drawImage(offscreenCanvas, 0, 0);
         }
@@ -69,11 +70,6 @@ class Stream {
     async initStream(session) {
         let clicked = false;
 
-        document.addEventListener('DOMContentLoaded', function () {
-            var container = document.getElementById('container');
-            var originalDisplay = getComputedStyle(container).display;
-            console.log(originalDisplay);
-        });
         //Todo: Fix the losing css problem after fullscreen.
         document.addEventListener('click', () => {
             if (document.fullscreenElement) {

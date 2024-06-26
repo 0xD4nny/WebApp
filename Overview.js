@@ -1,5 +1,4 @@
 class Overview{
-    
     constructor(OverviewInterval, session, myStream){
         this.OverviewInterval = OverviewInterval;
         this.session = session;
