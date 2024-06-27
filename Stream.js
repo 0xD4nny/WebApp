@@ -4,47 +4,52 @@ class Stream {
     }
 
     async downloadImage(command) {
-        try {
-            const response = await fetch(command.uri);
-            const blob = await response.blob();
-            const image = new Image();
-            image.src = URL.createObjectURL(blob);
-
-            const offscreenCanvas = document.createElement('canvas');
-            const ctx = offscreenCanvas.getContext('2d');
-
-            const mainCanvas = document.getElementById("stream");
-            const mainCtx = mainCanvas.getContext("2d");
-            mainCanvas
-
-            mainCtx.drawImage(offscreenCanvas, 0, 0);
+        const response = await fetch(command.uri);
+        const blob = await response.blob();
+        const image = new Image();
+        const imageLoadPromise = new Promise((resolve, reject) => {
+            image.onload = () => resolve(image);
+            image.onerror = reject;
+        });
+        image.src = URL.createObjectURL(blob);
+        return imageLoadPromise;
+    }
+    
+    async printImage(command, ctx)
+    {
+        try{
+            const img = await this.downloadImage(command, ctx);
+            await ctx.drawImage(img, 0, 0);
         }
-        catch (error) { console.error('Error fetching or drawing the image fragments:', error); }
+        catch(error){
+            console.error('Failed to load or draw the image:', error);
+        }
+
     }
 
     async eventHandler(response) {
         let isNotTerminated = true;
+    
+        const canvas = document.getElementById("stream");
+        const ctx = canvas.getContext("2d");
 
+        
         response.commands.forEach(command => {
+            console.log(`event: ${command.command}`);
             switch (command.command) {
                 case 'geometry':
-                    console.log(`geometry event: ${command.command}`); // returns width and height.
                     break;
-                case 'image':
-                    this.downloadImage(command);
-                    console.log(`image event: ${command.command}`); // returns img fragments.
+                    case 'image':
+                        this.printImage(command, ctx);
                     break;
-                case 'overlay':
-                    console.log(`overlay event: ${command.command}`); // returns the visibility of the overlay.
+                    case 'overlay':
                     break;
-                case 'overlayImage':
-                    console.log(`overlayImage event: ${command.command}`); // returns an overlay img.
+                    case 'overlayImage':
                     break;
-                case 'overlayPosition':
-                    console.log(`overlayPosition event: ${command.command}`); // returns the x and y pos for the Overlay.
+                    case 'overlayPosition':
                     break;
-                case 'terminated':
-                    isNotTerminated = false;
+                    case 'terminated':
+                        isNotTerminated = false;
                     const msgBox = document.getElementById("msgBox");
                     msgBox.classList.add("show");
                     setTimeout(function () { msgBox.classList.remove("show"); }, 3000);
@@ -81,7 +86,8 @@ class Stream {
                 clicked = true;
 
                 setInterval(this.OverviewIntervall);
-                document.exitFullscreen();
+                document.exitFullscreen();              
+                container.style.display = 'grid';
             }
         }) // this click event takes us back to the overview.
 

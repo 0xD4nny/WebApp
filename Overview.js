@@ -38,7 +38,11 @@ class Overview{
         img.classList.add('tile-image');
         tile.appendChild(img);
 
-        
+        const description = document.createElement('h5');
+        description.textContent = `Size ${100}`;
+        description.classList.add('description');
+        tile.appendChild(description);
+
         tile.addEventListener('click', () => { 
             event.stopPropagation();
             document.documentElement.webkitRequestFullscreen();
