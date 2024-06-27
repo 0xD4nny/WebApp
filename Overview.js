@@ -5,7 +5,7 @@ class Overview{
         this.myStream = myStream;
     };
 
-    async selectStream(streamNumber) { // gets call from createTile
+    async selectStream(streamNumber) { // gets call from tile.ClickEvent.
         try {
                 const response = await fetch('/api/select.sctx', {
                 method: 'POST',
@@ -39,7 +39,7 @@ class Overview{
         tile.appendChild(img);
 
         const description = document.createElement('h5');
-        description.textContent = `Size ${100}`;
+        description.textContent = `${Math.round(stream.previewSize/1024 * 10 ) / 10} KB`;
         description.classList.add('description');
         tile.appendChild(description);
 
