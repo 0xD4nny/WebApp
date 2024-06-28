@@ -19,7 +19,7 @@ class Stream {
     {
         try{
             const img = await this.downloadImage(command, ctx);
-            await ctx.drawImage(img, 0, 0);
+            await ctx.drawImage(img, command.x, command.y);
         }
         catch(error){
             console.error('Failed to load or draw the image:', error);
@@ -29,15 +29,16 @@ class Stream {
 
     async eventHandler(response) {
         let isNotTerminated = true;
-    
+        
         const canvas = document.getElementById("stream");
         const ctx = canvas.getContext("2d");
 
-        
         response.commands.forEach(command => {
             console.log(`event: ${command.command}`);
             switch (command.command) {
                 case 'geometry':
+                    canvas.width = command.width;
+                    canvas.height = command.height;
                     break;
                     case 'image':
                         this.printImage(command, ctx);
@@ -50,13 +51,11 @@ class Stream {
                     break;
                     case 'terminated':
                         isNotTerminated = false;
-                    const msgBox = document.getElementById("msgBox");
-                    msgBox.classList.add("show");
-                    setTimeout(function () { msgBox.classList.remove("show"); }, 3000);
-                    console.log(`terminated event: ${command.command}`); // returns weathever the stream is terminated.
+                        const msgBox = document.getElementById("msgBox");
+                        msgBox.classList.add("show");
+                        setTimeout(function () { msgBox.classList.remove("show"); }, 1500);
                     break;
-            }
-        });
+        }});
         return isNotTerminated;
     }
 
@@ -75,7 +74,6 @@ class Stream {
     async initStream(session) {
         let clicked = false;
 
-        //Todo: Fix the losing css problem after fullscreen.
         document.addEventListener('click', () => {
             if (document.fullscreenElement) {
                 const h1 = document.querySelector('h1');

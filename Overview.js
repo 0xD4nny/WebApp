@@ -40,7 +40,7 @@ class Overview{
 
         const description = document.createElement('h5');
         description.textContent = `${Math.round(stream.previewSize/1024 * 10 ) / 10} KB`;
-        description.classList.add('description');
+        description.classList.add('tile-description');
         tile.appendChild(description);
 
         tile.addEventListener('click', () => { 
