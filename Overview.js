@@ -1,8 +1,7 @@
 class Overview{
-    constructor(OverviewInterval, session, myStream){
-        this.OverviewInterval = OverviewInterval;
+    constructor(overviewInterval, session){
+        this.overviewInterval = overviewInterval;
         this.session = session;
-        this.myStream = myStream;
     };
 
     async selectStream(streamNumber) { // gets call from tile.ClickEvent.
@@ -50,11 +49,10 @@ class Overview{
             
             container.style.display = 'none';
             h1.style.display = 'none';
-            clearInterval(this.OverviewInterval);
+            clearInterval(this.overviewInterval);
             
-            this.myStream = new Stream(this.OverviewInterval);
-            this.myStream.initStream(this.session);
-            
+            let myStream = new Stream();
+            myStream.initStream(this.session, this.overviewInterval);
         });
         return tile;
     }

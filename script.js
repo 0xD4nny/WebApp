@@ -1,6 +1,5 @@
-let OverviewInterval;
+let overviewInterval;
 let overview;
-let myStream;
 
 async function fetchInitData() {
     try {
@@ -11,10 +10,10 @@ async function fetchInitData() {
 }
 
 async function init() {
-    const initResponse = await fetchInitData(); // this fetch is just for the seassonKey.
-    overview = new Overview(OverviewInterval, initResponse.session, myStream);
+    const initResponse = await fetchInitData();
+    overview = new Overview(overviewInterval, initResponse.session);
     overview.updateTiles(initResponse.session);
-    OverviewInterval = setInterval(() => overview.updateTiles(initResponse.session), 5000);
+    overviewInterval = setInterval(() => overview.updateTiles(initResponse.session), 5000);
 }
 
 init();
