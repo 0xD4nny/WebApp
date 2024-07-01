@@ -16,46 +16,31 @@ class Stream {
     }
 
     async downloadImage(command) {
-        const response = await fetch(command.uri);
-        const blob = await response.blob();
-        const image = new Image();
-        const imageLoadPromise = new Promise((resolve, reject) => {
-            image.onload = () => resolve(image);
-            image.onerror = reject;
-        });
-        image.src = URL.createObjectURL(blob);
-        return imageLoadPromise;
-    }
-
-    async printImage(command, ctx) {
-        try {
-            const img = await this.downloadImage(command, ctx);
-            await ctx.drawImage(img, command.x, command.y);
-        }
-        catch (error) { console.error('Failed to load or draw the image:', error); }
-
-    }
+        return await new Promise((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => resolve(img);
+            img.onerror = reject;
+            img.src = command.uri;
+    })};
 
     async eventHandler(response) {
-        let isNotTerminated = true;
-
         const canvas = document.getElementById("stream");
         const ctx = canvas.getContext("2d");
 
-
-        response.commands.forEach(command => {
-            console.log(`event: ${command.command}`);
-            switch (command.command) {
+        for(let i = 0; i < response.commands.length; i++){
+            console.log(`event: ${response.commands[i].command}`);
+            switch (response.commands[i].command) {
                 case 'geometry':
-                    canvas.width = command.width;
-                    canvas.height = command.height;
+                    canvas.width = response.commands[i].width;
+                    canvas.height = response.commands[i].height;
                     break;
                 case 'image':
-                    this.printImage(command, ctx);
+                    const img = await this.downloadImage(response.commands[i]);
+                    await ctx.drawImage(img, response.commands[i].x, response.commands[i].y, response.commands[i].width, response.commands[i].height);
                     break;
                 case 'overlay':
                     const overview = document.getElementById("msgBox");
-                    if (command == true)
+                    if (response.commands[i].command == true)
                         overview.classList.add("show");
                     else
                         overview.classList.remove("show");
@@ -65,14 +50,13 @@ class Stream {
                 case 'overlayPosition':
                     break;
                 case 'terminated':
-                    isNotTerminated = false;
                     const msgBox = document.getElementById("msgBox");
                     msgBox.classList.add("show");
                     setTimeout(function () { msgBox.classList.remove("show"); }, 1500);
-                    break;
+                    return false;
             }
-        });
-        return isNotTerminated;
+        };
+        return true;
     }
 
     async initStream(session) {

@@ -12,6 +12,7 @@ h1 {
 
 .stream {
     display:initial;
+    object-fit: fill;
 }
 
 .container {
