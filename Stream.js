@@ -38,6 +38,16 @@ class Stream {
                     await ctx.drawImage(img, response.commands[i].x, response.commands[i].y, response.commands[i].width, response.commands[i].height);
                     break;
 
+                case 'overlayPosition':
+                    overlayPosX = response.commands[i].x;
+                    overlayPosY = response.commands[i].y
+                    break;
+
+                case 'overlayImage':
+                    const overlayImg = await this.downloadImage(response.commands[i]);
+                    overlayCtx.drawImage(overlayImg, overlayPosX, overlayPosY)
+                    break;
+
                 case 'overlay':
                     const overlay = document.getElementById("overlay");
                     if (response.commands[i].visible == true)
@@ -46,23 +56,13 @@ class Stream {
                         overlay.classList.remove("show");
                     break;
 
-                case 'overlayImage':
-                    const overlayImg = await this.downloadImage(response.commands[i]);
-                    overlayCtx.drawImage(overlayImg, overlayPosX, overlayPosY)
-                    break;
-
-                case 'overlayPosition':
-                    overlayPosX = response.commands[i].x;
-                    overlayPosY = response.commands[i].y
-                    break;
-
                 case 'terminated':
                     const msgBox = document.getElementById("msgBox");
                     msgBox.classList.add("show");
                     setTimeout(function () { msgBox.classList.remove("show"); }, 1500);
                     return false;
-
-        }};
+            }
+        };
         return true;
     }
 
