@@ -65,7 +65,7 @@ class Stream {
         };
         return true;
     }
-
+    
     async initStream(session, overviewIntervall) {
         let clicked = false;
         const canvas = document.getElementById("stream");
@@ -73,10 +73,7 @@ class Stream {
 
         document.addEventListener('click', () => {
             event.stopPropagation();
-            const h1 = document.querySelector('h1');
-            const container = document.querySelector('.container');
-
-            h1.style.display = 'inherit';
+            const container = document.querySelector('.tileContainer');
             container.style.display = 'grid';
             canvas.style.display = 'none';
             const ctx = canvas.getContext("2d");

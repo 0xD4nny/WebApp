@@ -23,13 +23,12 @@ class Overview{
         catch (error) { console.error('Fetching has failed.', error); }
     }
 
-    createTile(stream, streamNumber, h1, container) { // get call from updateTiles
+    createStreamTile(stream, streamNumber, tileContainer) { // get call from updateTiles
         const tile = document.createElement('div');
         tile.classList.add('tile');
         
         const title = document.createElement('h3');
-        title.textContent = `Stream ${streamNumber}`;
-        title.classList.add('tile-title');
+        title.textContent = `Monitor ${streamNumber}`;
         tile.appendChild(title);
         
         const img = new Image();
@@ -37,18 +36,17 @@ class Overview{
         img.classList.add('tile-image');
         tile.appendChild(img);
 
-        const description = document.createElement('h5');
-        description.textContent = `${Math.round(stream.previewSize/1024 * 10 ) / 10} KB`;
-        description.classList.add('tile-description');
-        tile.appendChild(description);
+        const imgSize = document.createElement('h5');
+        imgSize.textContent = `${Math.round(stream.previewSize/1024 * 10 ) / 10} KB`;
+        tile.appendChild(imgSize);
 
         tile.addEventListener('click', () => { 
             event.stopPropagation();
+
             document.documentElement.webkitRequestFullscreen();
             this.selectStream(streamNumber - 1);
             
-            container.style.display = 'none';
-            h1.style.display = 'none';
+            tileContainer.style.display = 'none';
             clearInterval(this.overviewInterval);
             
             let myStream = new Stream();
@@ -56,15 +54,30 @@ class Overview{
         });
         return tile;
     }
-    
+
+    createSystemOverviewTile(overviewResponse, systemOverview){
+        const headline = document.createElement('h3');
+        headline.textContent = `SystemOverview.`
+        systemOverview.appendChild(headline);
+
+        const description = document.createElement('h5');
+        description.textContent = `System Informations:\nBios version: ${overviewResponse.system.bios.version}.\n
+        Bios manufacturer: ${overviewResponse.system.bios.manufacturer}.\n\nBus: ${overviewResponse.system.bus}.\n
+        DisplayAdapter: ${overviewResponse.system.displayAdapter.adapter}.\nRam: ${overviewResponse.system.displayAdapter.ram}.\n`;
+        systemOverview.appendChild(description);
+    }
+
     async updateTiles() { 
         const overviewResponse = await this.fetchOverviewData();
         
-        const container = document.querySelector('.container');
-        const h1 = document.querySelector('h1');
-        container.innerHTML = '';
+        const systemOverview = document.getElementById('systemOverviewTile');
+        systemOverview.innerHTML = '';
         
+        const tileContainer = document.querySelector('.tileContainer');
+        tileContainer.innerHTML = '';
+
+        this.createSystemOverviewTile(overviewResponse, systemOverview);
         for (let i = 0; i < overviewResponse.streams.length; i++)
-            container.appendChild(this.createTile(overviewResponse.streams[i], i + 1, h1, container));   
+            tileContainer.appendChild(this.createStreamTile(overviewResponse.streams[i], i + 1, tileContainer));
     }
 }

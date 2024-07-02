@@ -12,8 +12,8 @@ async function fetchInitData() {
 async function init() {
     const initResponse = await fetchInitData();
     overview = new Overview(overviewInterval, initResponse.session);
-    overview.updateTiles(initResponse.session);
-    overviewInterval = setInterval(() => overview.updateTiles(initResponse.session), 5000);
+    overview.updateTiles();
+    overviewInterval = setInterval(() => overview.updateTiles(), 5005);
 }
 
 init();

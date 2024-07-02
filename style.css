@@ -7,12 +7,20 @@ body {
     position: relative;
 }
 
+#systemOverviewTile{
+    background-color: rgb(64, 64, 64);
+    border: 2px solid rgb(32, 32, 32);
+    width: calc(100% - 64px);
+    margin: auto;
+    margin-top: 30px;
 
-.container {
-    display: grid;
+}
+
+.tileContainer {
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    gap: 30px;
+    display: grid;
     padding: 30px;
+    gap: 30px;
 }
 
 .tile {
@@ -28,7 +36,7 @@ body {
     image-rendering: optimizeQuality;
     object-fit: fill;
     width: 70%;
-    height: 70%;
+    height: auto;
 }
 
 
@@ -36,6 +44,7 @@ body {
     image-rendering: optimizeQuality;
     object-fit: fill;
     visibility: hidden;
+    z-index: 10;
 }
 
 #overlay.show {
@@ -65,4 +74,5 @@ body {
     position: fixed;
     top: 0;
     left: 0;
+    z-index: 5;
 }
