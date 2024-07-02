@@ -1,12 +1,12 @@
-class Overview{
-    constructor(overviewInterval, session){
+class Overview {
+    constructor(overviewInterval, session) {
         this.overviewInterval = overviewInterval;
         this.session = session;
     };
 
     async selectStream(streamNumber) { // gets call from tile.ClickEvent.
         try {
-                const response = await fetch('/api/select.sctx', {
+            const response = await fetch('/api/select.sctx', {
                 method: 'POST',
                 body: `session=${this.session}&stream=${encodeURIComponent(streamNumber)}`,
             });
@@ -23,61 +23,86 @@ class Overview{
         catch (error) { console.error('Fetching has failed.', error); }
     }
 
-    createStreamTile(stream, streamNumber, tileContainer) { // get call from updateTiles
+    createStreamTile(stream, streamNumber, tileContainer, overviewTile) { // get call from updateTiles
         const tile = document.createElement('div');
         tile.classList.add('tile');
-        
+
         const title = document.createElement('h3');
         title.textContent = `Monitor ${streamNumber}`;
         tile.appendChild(title);
-        
+
         const img = new Image();
         img.src = `data:image/jpeg;base64,${stream.previewData}`;
         img.classList.add('tile-image');
         tile.appendChild(img);
 
         const imgSize = document.createElement('h5');
-        imgSize.textContent = `${Math.round(stream.previewSize/1024 * 10 ) / 10} KB`;
+        imgSize.textContent = `${Math.round(stream.previewSize / 1024 * 10) / 10} KB`;
         tile.appendChild(imgSize);
 
-        tile.addEventListener('click', () => { 
+        tile.addEventListener('click', () => {
             event.stopPropagation();
 
             document.documentElement.webkitRequestFullscreen();
             this.selectStream(streamNumber - 1);
-            
-            tileContainer.style.display = 'none';
+            overviewTile.style.visibility = 'hidden';
+            tileContainer.style.visibility = 'hidden';
             clearInterval(this.overviewInterval);
-            
+
             let myStream = new Stream();
             myStream.initStream(this.session, this.overviewInterval);
         });
         return tile;
     }
 
-    createSystemOverviewTile(overviewResponse, systemOverview){
-        const headline = document.createElement('h3');
-        headline.textContent = `SystemOverview.`
-        systemOverview.appendChild(headline);
+    createListTree(overviewResponse, overviewTile) {
+        const ul = document.createElement('ul');
+        ul.id = 'tree';
+        overviewTile.appendChild(ul);
 
-        const description = document.createElement('h5');
-        description.textContent = `System Informations:\nBios version: ${overviewResponse.system.bios.version}.\n
-        Bios manufacturer: ${overviewResponse.system.bios.manufacturer}.\n\nBus: ${overviewResponse.system.bus}.\n
-        DisplayAdapter: ${overviewResponse.system.displayAdapter.adapter}.\nRam: ${overviewResponse.system.displayAdapter.ram}.\n`;
-        systemOverview.appendChild(description);
+        for (const key in overviewResponse.system) {
+            if (overviewResponse.system.hasOwnProperty(key)) {
+                const value = overviewResponse.system[key];
+                const li = document.createElement('li');
+                ul.appendChild(li);
+
+                if (typeof value === 'object' && value !== null) {
+                    li.textContent = key;
+                    this.createListTree(value, li);
+                }
+                else
+                    li.textContent = `${key}: ${value}`;
+            }
+        }
     }
 
-    async updateTiles() { 
+    createOverviewTile(overviewResponse, overviewTile) {
+        const headline = document.createElement('h4');
+        headline.textContent = `System Overview`;
+        overviewTile.appendChild(headline);
+    
+        this.createListTree(overviewResponse, overviewTile);
+        const tree = document.getElementById('tree');
+        
+        overviewTile.addEventListener('click', () => {
+            if(tree.style.visibility === 'hidden')
+                tree.style.visibility = 'visible';
+            else
+                tree.style.visibility = 'hidden';
+        });
+    }
+
+    async updateTiles() {
         const overviewResponse = await this.fetchOverviewData();
         
-        const systemOverview = document.getElementById('systemOverviewTile');
-        systemOverview.innerHTML = '';
+        const overviewTile = document.getElementById('overviewTile');
+        overviewTile.innerHTML = '';
+        this.createOverviewTile(overviewResponse, overviewTile);
         
         const tileContainer = document.querySelector('.tileContainer');
         tileContainer.innerHTML = '';
-
-        this.createSystemOverviewTile(overviewResponse, systemOverview);
         for (let i = 0; i < overviewResponse.streams.length; i++)
-            tileContainer.appendChild(this.createStreamTile(overviewResponse.streams[i], i + 1, tileContainer));
+            tileContainer.appendChild(this.createStreamTile(overviewResponse.streams[i], i + 1, tileContainer,overviewTile));
+        
     }
 }

@@ -7,20 +7,12 @@ body {
     position: relative;
 }
 
-#systemOverviewTile{
-    background-color: rgb(64, 64, 64);
-    border: 2px solid rgb(32, 32, 32);
-    width: calc(100% - 64px);
-    margin: auto;
-    margin-top: 30px;
-
-}
-
 .tileContainer {
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
     display: grid;
     padding: 30px;
     gap: 30px;
+    visibility: visible;
 }
 
 .tile {
@@ -39,24 +31,37 @@ body {
     height: auto;
 }
 
+#overviewTile {
+    background-color: rgb(64, 64, 64);
+    border: 2px solid rgb(32, 32, 32);
+    width: calc(100% - 64px);
+    margin: auto;
+    margin-top: 30px;
+    text-align: center;
+    list-style-type: none;
+    visibility: visible;
+}
+
+#stream {
+    image-rendering: optimizeQuality;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 5;
+}
 
 #overlay {
     image-rendering: optimizeQuality;
     object-fit: fill;
     visibility: hidden;
     z-index: 10;
-}
-
-#overlay.show {
     visibility: visible;
 }
-
 
 #msgBox {
     background-color: rgb(64, 64, 64);
     border: 2px solid rgb(32, 32, 32);
     position: fixed;
-    text-align: center;
     padding: 20px;
     top: 50%;
     left: 50%;
@@ -66,13 +71,4 @@ body {
 
 #msgBox.show {
     visibility: visible;
-}
-
-
-#stream {
-    image-rendering: optimizeQuality;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 5;
 }

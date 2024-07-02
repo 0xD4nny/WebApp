@@ -50,10 +50,10 @@ class Stream {
 
                 case 'overlay':
                     const overlay = document.getElementById("overlay");
-                    if (response.commands[i].visible == true)
-                        overlay.classList.add("show");
+                    if (response.commands[i].visible === true)
+                        overlay.style.visibility = 'visibile';
                     else
-                        overlay.classList.remove("show");
+                    overlay.style.visibility = 'hidden';
                     break;
 
                 case 'terminated':
@@ -70,17 +70,24 @@ class Stream {
         let clicked = false;
         const canvas = document.getElementById("stream");
         canvas.style.display = 'initial';
+        
 
         document.addEventListener('click', () => {
             event.stopPropagation();
             const container = document.querySelector('.tileContainer');
             container.style.display = 'grid';
+            container.style.visibility = 'visible';
+
+            const overviewTile = document.getElementById('overviewTile');
+            overviewTile.style.visibility = 'visible';
+
             canvas.style.display = 'none';
             const ctx = canvas.getContext("2d");
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            clicked = true;
             document.exitFullscreen();
+            clicked = true;
+
             setInterval(overviewIntervall);
         }) // this click event takes us back to the overview.
 
