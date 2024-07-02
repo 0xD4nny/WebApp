@@ -1,74 +1,69 @@
 body {
-    background-color: rgb(96, 96, 96);
+    background-color: rgb(48, 48, 48);
+    color: rgb(0,0,0);
     font-family: sans-serif;
-    color: white;
     text-align: center;
-    box-sizing: border-box;
     position: relative;
+    box-sizing: border-box;
+    image-rendering: optimizeQuality;
 }
 
 .tileContainer {
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    display: grid;
     padding: 30px;
     gap: 30px;
+    display: grid;
     visibility: visible;
 }
 
 .tile {
-    background-color: rgb(64, 64, 64);
-    border: 2px solid rgb(32, 32, 32);
+    background-color: rgb(0, 64, 64);
+    border: 2px solid rgb(0, 0, 0);
 }
 
 .tile:hover {
-    background-color: rgb(128, 128, 128);
+    background-color: rgb(0, 128, 128);
 }
 
 .tile-image {
-    image-rendering: optimizeQuality;
     object-fit: fill;
     width: 70%;
     height: auto;
 }
 
 #overviewTile {
-    background-color: rgb(64, 64, 64);
-    border: 2px solid rgb(32, 32, 32);
+    background-color: rgb(0, 64, 64);
+    border: 2px solid rgb(0, 0, 0);
     width: calc(100% - 64px);
     margin: auto;
     margin-top: 30px;
     text-align: center;
-    list-style-type: none;
     visibility: visible;
+}
+#overviewTile:hover {
+    background-color: rgb(0, 128, 128);
 }
 
 #stream {
-    image-rendering: optimizeQuality;
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 5;
+    z-index: 1;
+    visibility: visible;
 }
 
 #overlay {
-    image-rendering: optimizeQuality;
-    object-fit: fill;
-    visibility: hidden;
-    z-index: 10;
+    position: relative;
     visibility: visible;
+    z-index: 2;
 }
 
 #msgBox {
-    background-color: rgb(64, 64, 64);
     border: 2px solid rgb(32, 32, 32);
     position: fixed;
     padding: 20px;
-    top: 50%;
     left: 50%;
+    top: 50%;
     transform: translate(-50%, -50%);
     visibility: hidden;
-}
-
-#msgBox.show {
-    visibility: visible;
 }

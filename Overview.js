@@ -23,7 +23,7 @@ class Overview {
         catch (error) { console.error('Fetching has failed.', error); }
     }
 
-    createStreamTile(stream, streamNumber, tileContainer, overviewTile) { // get call from updateTiles
+    createStreamTile(stream, streamNumber, tileContainer) { // get call from updateTiles
         const tile = document.createElement('div');
         tile.classList.add('tile');
 
@@ -42,9 +42,10 @@ class Overview {
 
         tile.addEventListener('click', () => {
             event.stopPropagation();
-
             document.documentElement.webkitRequestFullscreen();
             this.selectStream(streamNumber - 1);
+
+            const overviewTile = document.getElementById('overviewTile');
             overviewTile.style.visibility = 'hidden';
             tileContainer.style.visibility = 'hidden';
             clearInterval(this.overviewInterval);
@@ -80,29 +81,30 @@ class Overview {
         const headline = document.createElement('h4');
         headline.textContent = `System Overview`;
         overviewTile.appendChild(headline);
-    
+        
         this.createListTree(overviewResponse, overviewTile);
         const tree = document.getElementById('tree');
-        
+        tree.style.display = 'none';
+
         overviewTile.addEventListener('click', () => {
-            if(tree.style.visibility === 'hidden')
-                tree.style.visibility = 'visible';
+            if(tree.style.display === 'none'){
+                tree.style.display = 'initial';
+                tree.style.listStyleType = 'none';
+                tree.style.padding = '20px';
+            }
             else
-                tree.style.visibility = 'hidden';
+                tree.style.display = 'none';
         });
     }
 
     async updateTiles() {
         const overviewResponse = await this.fetchOverviewData();
-        
-        const overviewTile = document.getElementById('overviewTile');
-        overviewTile.innerHTML = '';
-        this.createOverviewTile(overviewResponse, overviewTile);
-        
+
         const tileContainer = document.querySelector('.tileContainer');
         tileContainer.innerHTML = '';
+
         for (let i = 0; i < overviewResponse.streams.length; i++)
-            tileContainer.appendChild(this.createStreamTile(overviewResponse.streams[i], i + 1, tileContainer,overviewTile));
+            tileContainer.appendChild(this.createStreamTile(overviewResponse.streams[i], i + 1, tileContainer));
         
     }
 }

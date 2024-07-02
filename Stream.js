@@ -1,4 +1,8 @@
 class Stream {
+    constructor(){
+        this.OverlayX = 32;
+        this.OverlayY = 32;
+    }
     async fetchStream(session) {
         try {
             const response = await fetch('/api/event.sctx', {
@@ -23,7 +27,9 @@ class Stream {
         const ctx = canvas.getContext("2d");
         const overlayCanvas = document.getElementById("overlay");
         const overlayCtx = overlayCanvas.getContext("2d");
-        let overlayPosX, overlayPosY;
+        overlayCanvas.width = 68;
+        overlayCanvas.height = 68;
+        overlayCanvas.style.zIndex = top;
 
         for (let i = 0; i < response.commands.length; i++) {
             console.log(`event: ${response.commands[i].command}`);
@@ -39,27 +45,26 @@ class Stream {
                     break;
 
                 case 'overlayPosition':
-                    overlayPosX = response.commands[i].x;
-                    overlayPosY = response.commands[i].y
+                    this.OverlayX = response.commands[i].x;
+                    this.OverlayY = response.commands[i].y
                     break;
 
                 case 'overlayImage':
                     const overlayImg = await this.downloadImage(response.commands[i]);
-                    overlayCtx.drawImage(overlayImg, overlayPosX, overlayPosY)
+                    await overlayCtx.drawImage(overlayImg, this.OverlayX, this.OverlayY, 68, 68)
                     break;
 
                 case 'overlay':
                     const overlay = document.getElementById("overlay");
                     if (response.commands[i].visible === true)
-                        overlay.style.visibility = 'visibile';
+                        overlay.style.visibility = 'visible';
                     else
                     overlay.style.visibility = 'hidden';
                     break;
 
                 case 'terminated':
                     const msgBox = document.getElementById("msgBox");
-                    msgBox.classList.add("show");
-                    setTimeout(function () { msgBox.classList.remove("show"); }, 1500);
+                    msgBox.style.visibility = 'visible';
                     return false;
             }
         };
@@ -71,19 +76,22 @@ class Stream {
         const canvas = document.getElementById("stream");
         canvas.style.display = 'initial';
         
-
         document.addEventListener('click', () => {
             event.stopPropagation();
             const container = document.querySelector('.tileContainer');
             container.style.display = 'grid';
             container.style.visibility = 'visible';
-
+            
             const overviewTile = document.getElementById('overviewTile');
             overviewTile.style.visibility = 'visible';
-
+            
+            
             canvas.style.display = 'none';
             const ctx = canvas.getContext("2d");
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const msgBox = document.getElementById("msgBox");
+            msgBox.style.visibility = 'hidden';
 
             document.exitFullscreen();
             clicked = true;

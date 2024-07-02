@@ -12,7 +12,10 @@ async function init() {
     const initResponse = await fetchInitData();
     
     const overview = new Overview(overviewInterval, initResponse.session);
-       
+    
+    const overviewTile = document.getElementById('overviewTile');
+    overview.createOverviewTile(initResponse, overviewTile);
+
     overview.updateTiles();
     overviewInterval = setInterval(() => overview.updateTiles(), 5005);
 }
