@@ -1,8 +1,13 @@
 class Stream {
-    constructor(){
-        this.OverlayX = 32;
-        this.OverlayY = 32;
-    }
+    #overlayPosX = 32;
+    #overlayPosY = 32;
+
+    #streamCanvas = null;
+    #streamCanavsCtx = null;
+
+    #overlayCanvas = null;
+    #overlayCtx = null;
+
     async fetchStream(session) {
         try {
             const response = await fetch('/api/event.sctx', {
@@ -23,43 +28,37 @@ class Stream {
     };
 
     async eventHandler(response) {
-        const canvas = document.getElementById("stream");
-        const ctx = canvas.getContext("2d");
-        const overlayCanvas = document.getElementById("overlay");
-        const overlayCtx = overlayCanvas.getContext("2d");
-        overlayCanvas.width = 68;
-        overlayCanvas.height = 68;
-        overlayCanvas.style.zIndex = top;
-
         for (let i = 0; i < response.commands.length; i++) {
-            console.log(`event: ${response.commands[i].command}`);
+            //console.log(`event: ${response.commands[i].command}`);
             switch (response.commands[i].command) {
                 case 'geometry':
-                    canvas.width = response.commands[i].width;
-                    canvas.height = response.commands[i].height;
+                    this.#streamCanvas.width = response.commands[i].width;
+                    this.#streamCanvas.height = response.commands[i].height;
+                    this.#overlayCanvas.width = response.commands[i].width;
+                    this.#overlayCanvas.height = response.commands[i].height;
                     break;
 
                 case 'image':
-                    const img = await this.downloadImage(response.commands[i]);
-                    await ctx.drawImage(img, response.commands[i].x, response.commands[i].y, response.commands[i].width, response.commands[i].height);
+                    const image = await this.downloadImage(response.commands[i]);
+                    await this.#streamCanavsCtx.drawImage(image, response.commands[i].x, response.commands[i].y, response.commands[i].width, response.commands[i].height);
                     break;
 
                 case 'overlayPosition':
-                    this.OverlayX = response.commands[i].x;
-                    this.OverlayY = response.commands[i].y
+                    this.#overlayPosX = response.commands[i].x;
+                    this.#overlayPosY = response.commands[i].y
                     break;
 
                 case 'overlayImage':
-                    const overlayImg = await this.downloadImage(response.commands[i]);
-                    await overlayCtx.drawImage(overlayImg, this.OverlayX, this.OverlayY, 68, 68)
+                    const overlayImage = await this.downloadImage(response.commands[i]);
+                    await this.#overlayCtx.clearRect(0, 0, this.#overlayCanvas.width, this.#overlayCanvas.height);
+                    await this.#overlayCtx.drawImage(overlayImage, this.#overlayPosX, this.#overlayPosY, 68, 68);
                     break;
 
                 case 'overlay':
-                    const overlay = document.getElementById("overlay");
                     if (response.commands[i].visible === true)
-                        overlay.style.visibility = 'visible';
+                        this.#overlayCanvas.style.visibility = 'visible';
                     else
-                    overlay.style.visibility = 'hidden';
+                        this.#overlayCanvas.style.visibility = 'hidden';
                     break;
 
                 case 'terminated':
@@ -70,25 +69,29 @@ class Stream {
         };
         return true;
     }
-    
+
     async initStream(session, overviewIntervall) {
         let clicked = false;
-        const canvas = document.getElementById("stream");
-        canvas.style.display = 'initial';
-        
+        this.#streamCanvas = document.getElementById("stream");
+        this.#streamCanavsCtx = this.#streamCanvas.getContext('2d');
+        this.#streamCanvas.style.display = 'initial';
+
+        this.#overlayCanvas = document.getElementById("overlay")
+        this.#overlayCtx = this.#overlayCanvas.getContext('2d');
+        this.#overlayCanvas.style.display = 'initial';
+
+        // this click event takes us back to the overview.
         document.addEventListener('click', () => {
             event.stopPropagation();
             const container = document.querySelector('.tileContainer');
             container.style.display = 'grid';
-            container.style.visibility = 'visible';
-            
+            container.style.visibility = 'visible'; 
+
             const overviewTile = document.getElementById('overviewTile');
             overviewTile.style.visibility = 'visible';
-            
-            
-            canvas.style.display = 'none';
-            const ctx = canvas.getContext("2d");
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            this.#streamCanvas.style.display = 'none';
+            this.#streamCanavsCtx.clearRect(0, 0, this.#streamCanvas.width, this.#streamCanvas.height);
 
             const msgBox = document.getElementById("msgBox");
             msgBox.style.visibility = 'hidden';
@@ -97,9 +100,10 @@ class Stream {
             clicked = true;
 
             setInterval(overviewIntervall);
-        }) // this click event takes us back to the overview.
+        })
 
         // the eventHandler returns false if we got a terminated command.
         while (await this.eventHandler(await this.fetchStream(session)) && !clicked);
+
     }
 }

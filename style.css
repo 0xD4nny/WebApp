@@ -2,11 +2,51 @@ body {
     background-color: rgb(48, 48, 48);
     color: rgb(0,0,0);
     font-family: sans-serif;
-    text-align: center;
+    text-align:center;
     position: relative;
     box-sizing: border-box;
     image-rendering: optimizeQuality;
 }
+
+/* Overview Tile */
+
+#overviewTile {
+    background-color: rgb(0, 64, 64);
+    border: 2px solid rgb(0, 0, 0);
+    width: calc(100% - 64px);
+    margin: auto;
+    margin-top: 30px;
+    visibility: visible;
+}
+
+#overviewTile:hover {
+    background-color: rgb(0, 128, 128);
+}
+
+.main-ul{    
+    list-style: none; 
+    padding: 0;
+}
+
+.sub-ul{
+    padding: 5px;
+    list-style: none;
+}
+
+.main-ul > li {
+    position: relative;
+    padding: 5px;
+    list-style: disc;
+    list-style-position:inside;
+}
+
+.sub-ul > li:first-child{
+    font-weight: bold;
+    position: relative;
+    border: 2px solid rgb(0, 0, 0);
+}
+
+/* TileContainer */
 
 .tileContainer {
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
@@ -31,17 +71,16 @@ body {
     height: auto;
 }
 
-#overviewTile {
-    background-color: rgb(0, 64, 64);
-    border: 2px solid rgb(0, 0, 0);
-    width: calc(100% - 64px);
-    margin: auto;
-    margin-top: 30px;
-    text-align: center;
-    visibility: visible;
-}
-#overviewTile:hover {
-    background-color: rgb(0, 128, 128);
+/* misc */
+
+#msgBox {
+    border: 2px solid rgb(32, 32, 32);
+    position: fixed;
+    padding: 20px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    visibility: hidden;
 }
 
 #stream {
@@ -53,17 +92,9 @@ body {
 }
 
 #overlay {
-    position: relative;
-    visibility: visible;
-    z-index: 2;
-}
-
-#msgBox {
-    border: 2px solid rgb(32, 32, 32);
     position: fixed;
-    padding: 20px;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    top: 0;
+    left: 0;
+    z-index: 2;
     visibility: hidden;
 }

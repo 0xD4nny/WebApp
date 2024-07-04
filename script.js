@@ -11,13 +11,13 @@ async function fetchInitData() {
 async function init() {
     const initResponse = await fetchInitData();
     
-    const overview = new Overview(overviewInterval, initResponse.session);
-    
-    const overviewTile = document.getElementById('overviewTile');
-    overview.createOverviewTile(initResponse, overviewTile);
+    const overview = new Overview(overviewInterval, initResponse.session);    
 
-    overview.updateTiles();
-    overviewInterval = setInterval(() => overview.updateTiles(), 5005);
+    overview.createOverviewTile(initResponse.system);
+
+    const tileContainer = document.querySelector('.tileContainer');
+    overview.updateTiles(tileContainer);
+    overviewInterval = setInterval(() => overview.updateTiles(tileContainer), 5000);
 }
 
 

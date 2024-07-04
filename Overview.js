@@ -56,51 +56,50 @@ class Overview {
         return tile;
     }
 
-    createListTree(overviewResponse, overviewTile) {
-        const ul = document.createElement('ul');
-        ul.id = 'tree';
-        overviewTile.appendChild(ul);
-
-        for (const key in overviewResponse.system) {
-            if (overviewResponse.system.hasOwnProperty(key)) {
-                const value = overviewResponse.system[key];
-                const li = document.createElement('li');
+    createListTree(systemData, ul) {
+        for (const key in systemData) {
+            const li = document.createElement('li');
+            if(typeof systemData[key] === 'object' && systemData[key] !== null){
+                const subUl = document.createElement('ul');
+                subUl.classList.add('sub-ul');
+                li.textContent = `${key}`;
+                subUl.appendChild(li);
+                ul.appendChild(subUl);
+                this.createListTree(systemData[key], ul);
+            }
+            else{
+                li.textContent = `${key}: ${systemData[key]}`;
                 ul.appendChild(li);
-
-                if (typeof value === 'object' && value !== null) {
-                    li.textContent = key;
-                    this.createListTree(value, li);
-                }
-                else
-                    li.textContent = `${key}: ${value}`;
             }
         }
     }
 
-    createOverviewTile(overviewResponse, overviewTile) {
+    createOverviewTile(systemData) {
+        const overviewTile = document.getElementById('overviewTile');
+
         const headline = document.createElement('h4');
         headline.textContent = `System Overview`;
         overviewTile.appendChild(headline);
         
-        this.createListTree(overviewResponse, overviewTile);
-        const tree = document.getElementById('tree');
-        tree.style.display = 'none';
+        const ul = document.createElement('ul');
+        overviewTile.appendChild(ul);
+        ul.classList.add('main-ul');
 
+        this.createListTree(systemData, ul);
+        ul.style.display = 'none';
+        
         overviewTile.addEventListener('click', () => {
-            if(tree.style.display === 'none'){
-                tree.style.display = 'initial';
-                tree.style.listStyleType = 'none';
-                tree.style.padding = '20px';
+            if(ul.style.display === 'none'){
+                ul.style.display = 'grid';
             }
             else
-                tree.style.display = 'none';
+                ul.style.display = 'none';
         });
     }
 
-    async updateTiles() {
+    async updateTiles(tileContainer) {
         const overviewResponse = await this.fetchOverviewData();
 
-        const tileContainer = document.querySelector('.tileContainer');
         tileContainer.innerHTML = '';
 
         for (let i = 0; i < overviewResponse.streams.length; i++)
