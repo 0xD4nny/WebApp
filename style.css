@@ -1,100 +1,72 @@
 body {
-    background-color: rgb(48, 48, 48);
-    color: rgb(0,0,0);
+    background-color: rgb(32, 32, 32);
+    color:black;
     font-family: sans-serif;
     text-align:center;
-    position: relative;
-    box-sizing: border-box;
-    image-rendering: optimizeQuality;
+    margin: 40px;
 }
 
-/* Overview Tile */
-
-#overviewTile {
-    background-color: rgb(0, 64, 64);
-    border: 2px solid rgb(0, 0, 0);
-    width: calc(100% - 64px);
-    margin: auto;
-    margin-top: 30px;
-    visibility: visible;
-}
-
-#overviewTile:hover {
-    background-color: rgb(0, 128, 128);
-}
-
-.main-ul{    
-    list-style: none; 
-    padding: 0;
-}
-
-.sub-ul{
-    padding: 5px;
-    list-style: none;
-}
-
-.main-ul > li {
-    position: relative;
-    padding: 5px;
-    list-style: disc;
-    list-style-position:inside;
-}
-
-.sub-ul > li:first-child{
-    font-weight: bold;
-    position: relative;
-    border: 2px solid rgb(0, 0, 0);
-}
-
-/* TileContainer */
-
+/* Overview */
 .tileContainer {
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    padding: 30px;
-    gap: 30px;
-    display: grid;
     visibility: visible;
+    display: grid;
+    gap: 40px;
 }
 
-.tile {
-    background-color: rgb(0, 64, 64);
+.overview-tile {
+    background-color: rgb(48 ,64 ,64);
     border: 2px solid rgb(0, 0, 0);
+    text-align:center;
+}
+.overview-tile:hover{
+    background-color: rgb(0, 153, 169)
+}
+.table-container{
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    padding: 40px;
+    padding-top: 5px;
+    gap: 40px;
+    text-align:left;
+}
+.overview-tile, table{
+    border: 2px solid rgb(0, 0, 0);
+    display: initial;
 }
 
-.tile:hover {
-    background-color: rgb(0, 128, 128);
+.streamTiles{
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    display: grid;
+    gap: 40px;  
 }
-
-.tile-image {
+.stream-tile {
+    background-color: rgb(48 ,64 ,64);
+    border: 2px solid rgb(0, 0, 0);
+    text-align:center;
+}
+.stream-tile:hover{
+    background-color: rgb(0, 153, 169)
+}
+.stream-tile-image {
+    position: relative;
     object-fit: fill;
-    width: 70%;
-    height: auto;
+    width: 80%;
+    image-rendering:optimizeQuality;
 }
 
-/* misc */
-
+/* Stream */
 #msgBox {
-    border: 2px solid rgb(32, 32, 32);
+    border: 1px solid rgb(0, 0, 0);
     position: fixed;
-    padding: 20px;
+    padding: 10px;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
     visibility: hidden;
 }
-
-#stream {
+#stream, #overlay {
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 1;
     visibility: visible;
-}
-
-#overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 2;
-    visibility: hidden;
+    image-rendering:optimizeSpeed;
 }

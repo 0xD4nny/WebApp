@@ -49,8 +49,8 @@ class Stream {
                     break;
 
                 case 'overlayImage':
+                    this.#overlayCtx.clearRect(0, 0, this.#overlayCanvas.width, this.#overlayCanvas.height);
                     const overlayImage = await this.downloadImage(response.commands[i]);
-                    await this.#overlayCtx.clearRect(0, 0, this.#overlayCanvas.width, this.#overlayCanvas.height);
                     await this.#overlayCtx.drawImage(overlayImage, this.#overlayPosX, this.#overlayPosY, 68, 68);
                     break;
 
@@ -70,7 +70,7 @@ class Stream {
         return true;
     }
 
-    async initStream(session, overviewIntervall) {
+    async initStream(session, overviewIntervall,) {
         let clicked = false;
         this.#streamCanvas = document.getElementById("stream");
         this.#streamCanavsCtx = this.#streamCanvas.getContext('2d');
@@ -85,11 +85,10 @@ class Stream {
             event.stopPropagation();
             const container = document.querySelector('.tileContainer');
             container.style.display = 'grid';
-            container.style.visibility = 'visible'; 
+            container.style.visibility = 'visible';
 
-            const overviewTile = document.getElementById('overviewTile');
-            overviewTile.style.visibility = 'visible';
-
+            this.#overlayCanvas.style.visibility = 'hidden';
+            
             this.#streamCanvas.style.display = 'none';
             this.#streamCanavsCtx.clearRect(0, 0, this.#streamCanvas.width, this.#streamCanvas.height);
 

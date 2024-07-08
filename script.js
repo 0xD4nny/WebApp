@@ -11,14 +11,17 @@ async function fetchInitData() {
 async function init() {
     const initResponse = await fetchInitData();
     
-    const overview = new Overview(overviewInterval, initResponse.session);    
-
-    overview.createOverviewTile(initResponse.system);
-
     const tileContainer = document.querySelector('.tileContainer');
-    overview.updateTiles(tileContainer);
-    overviewInterval = setInterval(() => overview.updateTiles(tileContainer), 5000);
-}
 
+    const overview = new Overview(overviewInterval, initResponse.session, tileContainer);    
+    overview.createOverviewTile(initResponse.system);
+    
+    const streamTiles = document.createElement('div');
+    streamTiles.classList.add('streamTiles');
+    tileContainer.appendChild(streamTiles);
+    
+    overview.updateStreamTiles(streamTiles);
+    overviewInterval = setInterval(() => overview.updateStreamTiles(streamTiles), 5000);
+}
 
 init();
