@@ -1,3 +1,7 @@
+const tableContainer = document.createElement('div');
+const wrapperObjects = [];
+const miscObject = {};
+
 class Overview {
     constructor(overviewInterval, session, tileContainer) {
         this.overviewInterval = overviewInterval;
@@ -16,7 +20,7 @@ class Overview {
         catch (error) { console.error(error); }
     }
 
-    async fetchOverviewData() { // get call from updateTiles.
+    async fetchOverviewData() { // gets call from updateTiles.
         try {
             const response = await fetch('/api/overview.sctx', { method: 'POST', body: `session=${this.session}` });
             return await response.json();
@@ -24,7 +28,7 @@ class Overview {
         catch (error) { console.error('Fetching has failed.', error); }
     }
 
-    createStreamTile(stream, streamNumber) { // get call from updateTiles
+    createStreamTile(stream, streamNumber) { // gets call from updateTiles
         const tile = document.createElement('div');
         tile.classList.add('stream-tile');
 
@@ -57,49 +61,91 @@ class Overview {
         return tile;
     }
 
-    //Todo: Sammle die Elemente ohne Verschachtelung und füge sie am ende als misc hinzu.
-    createListTree(systemData, tableContainer, misc) {
-        const table = document.createElement('table');
-        tableContainer.appendChild(table);
-        for (const key in systemData) {
-            const tr = document.createElement('tr');
-            table.appendChild(tr);
-
-            if(typeof systemData[key] === 'object' && systemData[key] !== null){
+    
+    collectElements(data, miscTable = 'misc') {
+        const entries = [];
+        for (const key in data)
+            if (typeof data[key] !== 'object') {
+                entries.push(`${miscTable} : ${key} : ${data[key]}`);
+                delete data[key];
+            }
+    
+        for (const entry of entries) {
+            const parts = entry.split(" : ").map(part => part.trim());
+            const[group, key, value] = parts;
+            if(!miscObject[group])
+                miscObject[group] = {};
+    
+            miscObject[group][key] = isNaN(value) ? value : Number(value);
+        }
+    }
+    
+    collectWrappers(data) {
+        let index = 0;
+        for (const key in data)
+            if (typeof data[key][Object.keys(data[key])[0]] === 'object')
+            if (data[key][Object.keys(data[key])[0]] !== null) {
+                wrapperObjects[index++] = data[key];
+                delete data[key];
+            }
+    }
+    
+    objToTable(data, table, isLast = false) {
+        for (const key in data) {
+            if (typeof data[key] === 'object' && data[key] !== null) {
+                const tr = document.createElement('tr');
                 const th = document.createElement('th');
                 const th2 = document.createElement('th');
-                th.textContent = `${key}`;
+                table.appendChild(tr);
                 tr.appendChild(th);
                 tr.appendChild(th2);
-                this.createListTree(systemData[key], tableContainer);
+                th.textContent = key;
+                this.objToTable(data[key], table, true);
+                if(isLast === false)
+                {
+                    table = document.createElement('table');
+                    tableContainer.appendChild(table);
+                }
             }
-            else{
+            else {
+                const tr = document.createElement('tr');
                 const th = document.createElement('th');
-                th.textContent = `${key}: `
-                tr.appendChild(th);
-
                 const td = document.createElement('td');
-                td.textContent = `${systemData[key]}`;
+                table.appendChild(tr);
+                tr.appendChild(th);
                 tr.appendChild(td);
+                th.textContent = key;
+                td.textContent = data[key];
             }
         }
     }
+      
 
-    createOverviewTile(systemData) {
+    createOverviewTile(data) {
         const overviewTile = document.createElement('div');
         overviewTile.classList.add('overview-tile');
 
         const headline = document.createElement('h4');
         headline.textContent = `System Overview`;
-        overviewTile.appendChild(headline);
-        
-        const tableContainer = document.createElement('div');
-        tableContainer.classList.add('table-container');
-        const misc = [];
-        this.createListTree(systemData, tableContainer, misc);
-        overviewTile.appendChild(tableContainer);
-        tableContainer.style.display = 'none';
+        overviewTile.appendChild(headline); 
 
+        tableContainer.classList.add('table-container');
+        overviewTile.appendChild(tableContainer);
+        
+        const table = document.createElement('table');
+        tableContainer.appendChild(table);
+        this.collectElements(data, 'sysConfig');
+        this.collectWrappers(data);
+        
+        this.objToTable(data, table);
+        for(let i = 0; i < wrapperObjects.length; i++)
+            this.objToTable(wrapperObjects[i],tableContainer.children[tableContainer.children.length - 1]);
+        this.objToTable(miscObject, tableContainer.children[tableContainer.children.length - 1]);
+
+        tableContainer.style.display = 'none';
+        
+        this.tileContainer.appendChild(overviewTile);
+        
         overviewTile.addEventListener('click', () => {
             if(tableContainer.style.display === 'none'){
                 tableContainer.style.display = 'grid';
@@ -107,7 +153,6 @@ class Overview {
             else
             tableContainer.style.display = 'none';
         });
-        this.tileContainer.appendChild(overviewTile);
     }
 
     async updateStreamTiles(streamTiles) {

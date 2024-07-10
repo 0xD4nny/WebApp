@@ -1,6 +1,6 @@
 body {
     background-color: rgb(32, 32, 32);
-    color:black;
+    color:rgba(32,32,32,0.7);
     font-family: sans-serif;
     text-align:center;
     margin: 40px;
@@ -14,12 +14,12 @@ body {
 }
 
 .overview-tile {
-    background-color: rgb(48 ,64 ,64);
-    border: 2px solid rgb(0, 0, 0);
+    background-color: rgb(0, 153, 169);
+    border: 2px solid rgba(32, 32, 32, 0.7);
     text-align:center;
 }
 .overview-tile:hover{
-    background-color: rgb(0, 153, 169)
+    background-color: rgb(0, 153, 169);
 }
 .table-container{
     grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
@@ -29,8 +29,14 @@ body {
     text-align:left;
 }
 .overview-tile, table{
-    border: 2px solid rgb(0, 0, 0);
+    border: 2px solid rgba(32, 32, 32, 0.7);
     display: initial;
+}
+
+/*
+*/
+th,td,tr{
+    border: 2px solid rgba(32, 32, 32, 0.7);
 }
 
 .streamTiles{
@@ -39,12 +45,12 @@ body {
     gap: 40px;  
 }
 .stream-tile {
-    background-color: rgb(48 ,64 ,64);
-    border: 2px solid rgb(0, 0, 0);
+    background-color: rgb(0, 153, 169);
+    border: 2px solid rgba(32, 32, 32, 0.7);
     text-align:center;
 }
 .stream-tile:hover{
-    background-color: rgb(0, 153, 169)
+    background-color: rgb(0, 255, 255)
 }
 .stream-tile-image {
     position: relative;
@@ -55,7 +61,7 @@ body {
 
 /* Stream */
 #msgBox {
-    border: 1px solid rgb(0, 0, 0);
+    border: 2px solid rgba(32, 32, 32, 0.7);
     position: fixed;
     padding: 10px;
     left: 50%;
