@@ -5,20 +5,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Icons">
     <title>System Overview</title>
 </head>
 
 <body>
-    <script src="Overview.js"></script>
-    <script src="Stream.js"></script>
-    <script src="script.js"></script>
-    
-    <div class="tileContainer"></div>
+    <div class="main-container">
+        <div class="systemOverview-container">
+            <h3>System Overview</h3>
+            <div class="table-container"></div>
+            <button class="material-icons"></button>
+        </div>
+        <div class="streamOverview-container"></div>
+    </div>
 
-    <canvas style = "z-index: 1;" id="stream"></canvas>
-    <canvas style = "z-index: 2;" id="overlay"></canvas>
-    
-    <div id="msgBox">Stream is terminated!</div>
+    <canvas style="z-index: 1;" id="stream"></canvas>
+    <canvas style="z-index: 2;" id="overlay"></canvas>
+
+    <script src="Stream.js"></script>
+    <script src="main.js"></script>
 </body>
 
 </html>

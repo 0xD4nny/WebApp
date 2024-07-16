@@ -1,78 +1,73 @@
 body {
     background-color: rgb(32, 32, 32);
-    color:rgba(32,32,32,0.7);
     font-family: sans-serif;
-    text-align:center;
-    margin: 40px;
+    margin: 2% 3% 2% 3%;
+}
+h3 {
+    padding: 15px;
+    margin: 0;
 }
 
-/* Overview */
-.tileContainer {
-    visibility: visible;
-    display: grid;
-    gap: 40px;
-}
-
-.overview-tile {
-    background-color: rgb(0, 153, 169);
-    border: 2px solid rgba(32, 32, 32, 0.7);
-    text-align:center;
-}
-.overview-tile:hover{
-    background-color: rgb(0, 153, 169);
-}
-.table-container{
-    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-    padding: 40px;
-    padding-top: 5px;
-    gap: 40px;
-    text-align:left;
-}
-.overview-tile, table{
-    border: 2px solid rgba(32, 32, 32, 0.7);
-    display: initial;
-}
-
-/*
-*/
-th,td,tr{
-    border: 2px solid rgba(32, 32, 32, 0.7);
-}
-
-.streamTiles{
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    display: grid;
-    gap: 40px;  
-}
-.stream-tile {
-    background-color: rgb(0, 153, 169);
-    border: 2px solid rgba(32, 32, 32, 0.7);
-    text-align:center;
-}
-.stream-tile:hover{
-    background-color: rgb(0, 255, 255)
-}
-.stream-tile-image {
-    position: relative;
-    object-fit: fill;
-    width: 80%;
-    image-rendering:optimizeQuality;
-}
-
-/* Stream */
-#msgBox {
-    border: 2px solid rgba(32, 32, 32, 0.7);
-    position: fixed;
-    padding: 10px;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    visibility: hidden;
-}
 #stream, #overlay {
+    image-rendering: optimizeSpeed;
+    visibility: visible;
     position: fixed;
     top: 0;
     left: 0;
+}
+
+.main-container {
     visibility: visible;
-    image-rendering:optimizeSpeed;
+    display: grid;
+    gap: 20px;
+}
+
+.systemOverview-container {
+    text-align: center;
+}
+.table-container {
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    padding-left: 20px;
+    padding-right: 20px;
+    gap: 20px;
+}
+table td,table th {
+    border-bottom: 2px dotted rgba(255, 255, 255, 0.3);
+    overflow-wrap: anywhere;
+    text-align: left;
+    width: 45%;
+}
+.table-container :last-child td,
+.table-container :last-child th{
+    border-bottom: none;
+}
+.material-symbols-outlined {
+    font-size: 32px;
+}
+button.material-icons {
+    border: none;
+    background-color: transparent;
+    padding: 5px 0px 5px 0px;
+}
+
+.streamOverview-container {
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    display: grid;
+    gap: 20px;
+    text-align: center;
+}
+.tile-image {
+    image-rendering: optimizeQuality;
+    padding-bottom: 20px;
+    width: 75%;
+}
+
+.systemOverview-container table, .stream-tile, .systemOverview-container {
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+.stream-tile, .systemOverview-container{
+    background-color: rgb(64, 64, 64);
+}
+.stream-tile:hover, button.material-icons:hover {
+    background-color: rgb(80, 80, 80);
 }

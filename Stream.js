@@ -1,21 +1,29 @@
 class Stream {
-    #overlayPosX = 32;
-    #overlayPosY = 32;
-
     #streamCanvas = null;
     #streamCanavsCtx = null;
-
     #overlayCanvas = null;
     #overlayCtx = null;
 
-    async fetchStream(session) {
+    #overlayPosX = 32;
+    #overlayPosY = 32;
+
+    #clicked = false;
+
+    constructor(overviewInterval, session) {
+        this.overviewInterval = overviewInterval;
+        this.session = session;
+    }
+
+    async fetchStream() {
         try {
             const response = await fetch('/api/event.sctx', {
-                method: 'POST', body: `session=${session}`
+                method: 'POST', body: `session=${this.session}`
             });
             return await response.json();
         }
         catch (error) { console.error(error); }
+
+        console.log(response.session + "init");
     }
 
     async downloadImage(command) {
@@ -49,7 +57,7 @@ class Stream {
                     break;
 
                 case 'overlayImage':
-                    this.#overlayCtx.clearRect(0, 0, this.#overlayCanvas.width, this.#overlayCanvas.height);
+                    await this.#overlayCtx.clearRect(0, 0, this.#overlayCanvas.width, this.#overlayCanvas.height);
                     const overlayImage = await this.downloadImage(response.commands[i]);
                     await this.#overlayCtx.drawImage(overlayImage, this.#overlayPosX, this.#overlayPosY, 68, 68);
                     break;
@@ -62,47 +70,48 @@ class Stream {
                     break;
 
                 case 'terminated':
-                    const msgBox = document.getElementById("msgBox");
-                    msgBox.style.visibility = 'visible';
+                    alert("Terminated.");
+                    await this.backToOverview();
                     return false;
             }
         };
         return true;
     }
 
-    async initStream(session, overviewIntervall,) {
-        let clicked = false;
+    backToOverview() {
+        document.exitFullscreen();
+        this.#overlayCanvas.style.display = 'none';
+        this.#streamCanvas.style.display = 'none';
+        this.#streamCanavsCtx.clearRect(0, 0, this.#streamCanvas.width, this.#streamCanvas.height);
+        
+        const container = document.querySelector('.main-container');
+        container.style.display = 'grid';
+        container.style.visibility = 'visible';
+        
+        this.#clicked = true;
+        setInterval(this.overviewInterval);
+    }
+
+    async initStream() {
         this.#streamCanvas = document.getElementById("stream");
         this.#streamCanavsCtx = this.#streamCanvas.getContext('2d');
         this.#streamCanvas.style.display = 'initial';
 
-        this.#overlayCanvas = document.getElementById("overlay")
+        this.#overlayCanvas = document.getElementById("overlay");
         this.#overlayCtx = this.#overlayCanvas.getContext('2d');
         this.#overlayCanvas.style.display = 'initial';
 
-        // this click event takes us back to the overview.
-        document.addEventListener('click', () => {
+        this.#streamCanvas.addEventListener('click', () => {
             event.stopPropagation();
-            const container = document.querySelector('.tileContainer');
-            container.style.display = 'grid';
-            container.style.visibility = 'visible';
-
-            this.#overlayCanvas.style.visibility = 'hidden';
-            
-            this.#streamCanvas.style.display = 'none';
-            this.#streamCanavsCtx.clearRect(0, 0, this.#streamCanvas.width, this.#streamCanvas.height);
-
-            const msgBox = document.getElementById("msgBox");
-            msgBox.style.visibility = 'hidden';
-
-            document.exitFullscreen();
-            clicked = true;
-
-            setInterval(overviewIntervall);
+            this.backToOverview();
+        })
+        this.#overlayCanvas.addEventListener('click',() => {
+            event.stopPropagation();
+            this.backToOverview();
         })
 
         // the eventHandler returns false if we got a terminated command.
-        while (await this.eventHandler(await this.fetchStream(session)) && !clicked);
+        while (await this.eventHandler(await this.fetchStream()) && !this.#clicked);
 
     }
 }
