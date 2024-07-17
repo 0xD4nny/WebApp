@@ -29,6 +29,7 @@ async function selectStream(streamNumber) {
 }
 
 
+
 function createStreamTile(stream, streamNumber) {
     const tile = document.createElement('div');
     tile.classList.add('stream-tile');
@@ -51,32 +52,31 @@ function createStreamTile(stream, streamNumber) {
         
         const tableContainer = document.querySelector('.table-container');
         tableContainer.style.display = 'none';
+    
+        const myStream = new Stream();
         
-        clearInterval(overviewInterval);
-        
-        const myStream = new Stream(overviewInterval, session);
-        await myStream.initStream();
-        event.stopPropagation();
+        await myStream.initStream(session);
     });
     return tile;
 }
 
 async function updateStreamTiles(container) {
     const overviewResponse = await fetchOverviewData();
-    console.log(overviewResponse.session + "overview")
+
     container.innerHTML = '';
+
     for (let i = 0; i < overviewResponse.streams.length; i++)
-        container.appendChild(await this.createStreamTile(overviewResponse.streams[i], i + 1));
+        container.appendChild(this.createStreamTile(overviewResponse.streams[i], i + 1));
 }
 
 
 
-function collectElements(data, miscTable = 'misc') {
+function collectElements(data, objName = 'misc') {
     const entries = [];
     const newObject = {};
     for (const key in data)
         if (typeof data[key] !== 'object') {
-            entries.push(`${miscTable} : ${key} : ${data[key]}`);
+            entries.push(`${objName} : ${key} : ${data[key]}`);
             delete data[key];
         }
 
@@ -91,8 +91,8 @@ function collectElements(data, miscTable = 'misc') {
     return newObject;
 }
 
-function collectWrappers(data) {
-    let index = 0;
+function collectWrappers(data, lastItemIndex = 0) {
+    let index = lastItemIndex;
     const arr = []
     for (const key in data)
         if (typeof data[key][Object.keys(data[key])[0]] === 'object')
@@ -104,15 +104,15 @@ function collectWrappers(data) {
     return arr;
 }
 
-function createTable(data, table, tableContainer, isLast = false) {
-    for (const key in data) {
-        if (typeof data[key] === 'object' && data[key] !== null) {
+function createTable(obj, table, tableContainer, isLast = false) {
+    for (const key in obj) {
+        if (typeof obj[key] === 'object' && obj[key] !== null) {
             const tr = document.createElement('tr');
             const th = document.createElement('th');
             table.appendChild(tr);
             tr.appendChild(th);
             th.textContent = key;
-            createTable(data[key], table, tableContainer, true);
+            createTable(obj[key], table, tableContainer, true);
             if (isLast === false) {
                 table = document.createElement('table');
                 tableContainer.appendChild(table);
@@ -126,7 +126,7 @@ function createTable(data, table, tableContainer, isLast = false) {
             tr.appendChild(th);
             tr.appendChild(td);
             th.textContent = key + ":";
-            td.textContent = data[key];
+            td.textContent = obj[key];
         }
     }
 }
@@ -137,20 +137,22 @@ function createSystemOverviewTile(data) {
     tableContainer.appendChild(table);
     tableContainer.style.display = 'none';
 
-    const miscElements = collectElements(data, 'sysConfig');
-    const objs = collectWrappers(data);
+    const miscElements = collectElements(data.system, 'sysConfig');
+    const objs = collectWrappers(data.system);
 
-    createTable(data, table, tableContainer);
+    createTable(data.system, table, tableContainer);
     for (let i = 0; i < objs.length; i++)
         createTable(objs[i], tableContainer.children[tableContainer.children.length - 1], tableContainer);
     
     createTable(miscElements, tableContainer.children[tableContainer.children.length - 1], tableContainer);
+    
+    const memory = collectElements(window.performance.memory, "Browsermemory");
+    createTable(memory, tableContainer.children[tableContainer.children.length - 1], tableContainer, true);
 
     const button = document.querySelector('.material-icons');
     button.innerHTML = '<span class="material-symbols-outlined">toggle_off</span>';
 
     button.addEventListener('click', () => {
-        event.stopPropagation();
         if (tableContainer.style.display === 'none') {
             tableContainer.style.display = 'grid';
             button.innerHTML = '<span class="material-symbols-outlined">toggle_on</span>';
@@ -163,15 +165,17 @@ function createSystemOverviewTile(data) {
 
 }
 
+
+
 async function init() {
     const initResponse = await fetchInitData();
     session = initResponse.session;
-    console.log(session + "init");
-    createSystemOverviewTile(initResponse.system);
+    
+    createSystemOverviewTile(initResponse);
     
     const streamOverviewContaier = document.querySelector(".streamOverview-container");
     await updateStreamTiles(streamOverviewContaier);
-    overviewInterval = setInterval(async () => await updateStreamTiles(streamOverviewContaier), 5000);
+    setInterval(async () => await updateStreamTiles(streamOverviewContaier), 5000);
 }
 
 init();

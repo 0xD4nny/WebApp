@@ -9,21 +9,14 @@ class Stream {
 
     #clicked = false;
 
-    constructor(overviewInterval, session) {
-        this.overviewInterval = overviewInterval;
-        this.session = session;
-    }
-
-    async fetchStream() {
+    async fetchStream(session) {
         try {
             const response = await fetch('/api/event.sctx', {
-                method: 'POST', body: `session=${this.session}`
+                method: 'POST', body: `session=${session}`
             });
             return await response.json();
         }
         catch (error) { console.error(error); }
-
-        console.log(response.session + "init");
     }
 
     async downloadImage(command) {
@@ -57,7 +50,7 @@ class Stream {
                     break;
 
                 case 'overlayImage':
-                    await this.#overlayCtx.clearRect(0, 0, this.#overlayCanvas.width, this.#overlayCanvas.height);
+                    this.#overlayCtx.clearRect(0, 0, this.#overlayCanvas.width, this.#overlayCanvas.height);
                     const overlayImage = await this.downloadImage(response.commands[i]);
                     await this.#overlayCtx.drawImage(overlayImage, this.#overlayPosX, this.#overlayPosY, 68, 68);
                     break;
@@ -71,7 +64,7 @@ class Stream {
 
                 case 'terminated':
                     alert("Terminated.");
-                    await this.backToOverview();
+                    this.backToOverview();
                     return false;
             }
         };
@@ -83,16 +76,14 @@ class Stream {
         this.#overlayCanvas.style.display = 'none';
         this.#streamCanvas.style.display = 'none';
         this.#streamCanavsCtx.clearRect(0, 0, this.#streamCanvas.width, this.#streamCanvas.height);
-        
+
         const container = document.querySelector('.main-container');
         container.style.display = 'grid';
         container.style.visibility = 'visible';
-        
         this.#clicked = true;
-        setInterval(this.overviewInterval);
     }
 
-    async initStream() {
+    async initStream(session) {
         this.#streamCanvas = document.getElementById("stream");
         this.#streamCanavsCtx = this.#streamCanvas.getContext('2d');
         this.#streamCanvas.style.display = 'initial';
@@ -101,17 +92,10 @@ class Stream {
         this.#overlayCtx = this.#overlayCanvas.getContext('2d');
         this.#overlayCanvas.style.display = 'initial';
 
-        this.#streamCanvas.addEventListener('click', () => {
-            event.stopPropagation();
-            this.backToOverview();
-        })
-        this.#overlayCanvas.addEventListener('click',() => {
-            event.stopPropagation();
-            this.backToOverview();
-        })
+        this.#overlayCanvas.addEventListener('click', () => { this.backToOverview(); });
 
         // the eventHandler returns false if we got a terminated command.
-        while (await this.eventHandler(await this.fetchStream()) && !this.#clicked);
+        while (await this.eventHandler(await this.fetchStream(session)) && !this.#clicked);
 
     }
 }

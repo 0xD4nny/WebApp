@@ -7,10 +7,14 @@ h3 {
     padding: 15px;
     margin: 0;
 }
+th {
+    text-transform:capitalize;
+}
 
 #stream, #overlay {
     image-rendering: optimizeSpeed;
     visibility: visible;
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
@@ -32,14 +36,16 @@ h3 {
     gap: 20px;
 }
 table td,table th {
-    border-bottom: 2px dotted rgba(255, 255, 255, 0.3);
+    background-color: rgb(64, 128, 192, 0.3);
     overflow-wrap: anywhere;
     text-align: left;
     width: 45%;
+    font-weight: initial;
 }
-.table-container :last-child td,
-.table-container :last-child th{
-    border-bottom: none;
+
+.table-container tr th:last-child{
+    text-decoration:underline;
+    font-weight: bold;
 }
 .material-symbols-outlined {
     font-size: 32px;
@@ -59,15 +65,15 @@ button.material-icons {
 .tile-image {
     image-rendering: optimizeQuality;
     padding-bottom: 20px;
-    width: 75%;
+    width: 70%;
 }
 
-.systemOverview-container table, .stream-tile, .systemOverview-container {
-    border: 2px solid rgba(255, 255, 255, 0.3);
+.stream-tile, .systemOverview-container ,table{
+    border: 2px solid rgba(64,128,192, 0.8);
 }
 .stream-tile, .systemOverview-container{
-    background-color: rgb(64, 64, 64);
+    background-color: rgba(64,128,192, 0.2);
 }
 .stream-tile:hover, button.material-icons:hover {
-    background-color: rgb(80, 80, 80);
+    background-color: rgba(64,128,192, 0.4);
 }
