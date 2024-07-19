@@ -3,6 +3,8 @@ class Stream {
     #streamCanavsCtx = null;
     #overlayCanvas = null;
     #overlayCtx = null;
+    #canvasBuffer = null;
+    #canvasBufferCtx = null;
 
     #overlayPosX = 32;
     #overlayPosY = 32;
@@ -30,18 +32,19 @@ class Stream {
 
     async eventHandler(response) {
         for (let i = 0; i < response.commands.length; i++) {
-            //console.log(`event: ${response.commands[i].command}`);
             switch (response.commands[i].command) {
                 case 'geometry':
                     this.#streamCanvas.width = response.commands[i].width;
                     this.#streamCanvas.height = response.commands[i].height;
                     this.#overlayCanvas.width = response.commands[i].width;
                     this.#overlayCanvas.height = response.commands[i].height;
+                    this.#canvasBuffer.width = response.commands[i].width;
+                    this.#canvasBuffer.height = response.commands[i].height;
                     break;
 
                 case 'image':
                     const image = await this.downloadImage(response.commands[i]);
-                    await this.#streamCanavsCtx.drawImage(image, response.commands[i].x, response.commands[i].y, response.commands[i].width, response.commands[i].height);
+                    await this.#canvasBufferCtx.drawImage(image, response.commands[i].x, response.commands[i].y, response.commands[i].width, response.commands[i].height);
                     break;
 
                 case 'overlayPosition':
@@ -50,7 +53,7 @@ class Stream {
                     break;
 
                 case 'overlayImage':
-                    this.#overlayCtx.clearRect(0, 0, this.#overlayCanvas.width, this.#overlayCanvas.height);
+                    await this.#overlayCtx.clearRect(0, 0, this.#overlayCanvas.width, this.#overlayCanvas.height);
                     const overlayImage = await this.downloadImage(response.commands[i]);
                     await this.#overlayCtx.drawImage(overlayImage, this.#overlayPosX, this.#overlayPosY, 68, 68);
                     break;
@@ -68,6 +71,9 @@ class Stream {
                     return false;
             }
         };
+
+        await this.#streamCanavsCtx.drawImage(this.#canvasBuffer, 0, 0, this.#streamCanvas.width, this.#streamCanvas.height);
+
         return true;
     }
 
@@ -79,11 +85,13 @@ class Stream {
 
         const container = document.querySelector('.main-container');
         container.style.display = 'grid';
-        container.style.visibility = 'visible';
         this.#clicked = true;
     }
 
     async initStream(session) {
+        this.#canvasBuffer = document.createElement('canvas');
+        this.#canvasBufferCtx = this.#canvasBuffer.getContext('2d');
+
         this.#streamCanvas = document.getElementById("stream");
         this.#streamCanavsCtx = this.#streamCanvas.getContext('2d');
         this.#streamCanvas.style.display = 'initial';
@@ -91,10 +99,12 @@ class Stream {
         this.#overlayCanvas = document.getElementById("overlay");
         this.#overlayCtx = this.#overlayCanvas.getContext('2d');
         this.#overlayCanvas.style.display = 'initial';
+        
 
         this.#overlayCanvas.addEventListener('click', () => { this.backToOverview(); });
-
-        // the eventHandler returns false if we got a terminated command.
+        this.#streamCanvas.addEventListener('click', () => { this.backToOverview(); });
+        
+            // the eventHandler returns false if we got a terminated command.
         while (await this.eventHandler(await this.fetchStream(session)) && !this.#clicked);
 
     }
