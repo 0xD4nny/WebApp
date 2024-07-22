@@ -13,12 +13,12 @@ class Stream {
 
     async fetchStream(session) {
         try {
-            const response = await fetch('/api/event.sctx', {
-                method: 'POST', body: `session=${session}`
-            });
+            const response = await fetch('/api/event.sctx', { method: 'POST', body: `session=${session}` });
+            if (!response.ok) 
+                window.location.href = `/error.html?status=${response.status}`;
+                
             return await response.json();
-        }
-        catch (error) { console.error(error); }
+        } catch (error) { console.error(error); }
     }
 
     async downloadImage(command) {

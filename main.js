@@ -10,30 +10,34 @@ const Sizes = {
 }
 
 async function fetchInitData() {
-    try {
+    try{
         const response = await fetch('/api/init.sctx');
+        if (!response.ok)
+            window.location.href = `/error.html?status=${response.status}`;
+        
         return await response.json();
-    }
-    catch (error) { console.error(error); }
+    } catch (error) { console.error(error); }
 }
 
 async function fetchOverviewData() {
-    try {
+    try{
         const response = await fetch('/api/overview.sctx', { method: 'POST', body: `session=${session}` });
+        if (!response.ok)
+            window.location.href = `/error.html?status=${response.status}`;
+        
         return await response.json();
-    }
-    catch (error) { console.error(error); }
+    } catch (error) { console.error(error); }
 }
 
 async function selectStream(streamNumber) {
-    try {
+    try{
         const response = await fetch('/api/select.sctx', {
             method: 'POST',
             body: `session=${session}&stream=${(streamNumber)}`,
         });
-        return response;
-    }
-    catch (error) { console.error(error); }
+        if (!response.ok) 
+            window.location.href = `/error.html?status=${response.status}`;
+    } catch (error) { console.error(error); }
 }
 
 
@@ -81,20 +85,20 @@ async function updateStreamTiles(container) {
 
 //Adds an postFix and convertes dataSizes /1024 and Hz 1000/
 function converteData(data) {
-    for(key in data){
-        if(typeof data[key] === 'object' && data[key] !== null){
+    for (key in data) {
+        if (typeof data[key] === 'object' && data[key] !== null) {
             converteData(data[key]);
             continue;
         }
-        if(key === 'total' || key === 'available' || key === 'ram' || key === 'size' || key === 'space' || key === 'totalJSHeapSize' || key === 'usedJSHeapSize' || key === 'jsHeapSizeLimit'){
+        if (key === 'total' || key === 'available' || key === 'ram' || key === 'size' || key === 'space' || key === 'totalJSHeapSize' || key === 'usedJSHeapSize' || key === 'jsHeapSizeLimit') {
             let iterations = 0;
-            while(data[key] > 1000){
+            while (data[key] > 1000) {
                 data[key] /= 1024;
                 ++iterations;
             }
             data[key] = data[key].toFixed(2) + Sizes[iterations];
         }
-        if(key === 'coreSpeed' || key === 'theoreticalTotalSpeed')
+        if (key === 'coreSpeed' || key === 'theoreticalTotalSpeed')
             data[key] = (data[key] / 1000).toFixed(2) + 'GHz';
     }
 

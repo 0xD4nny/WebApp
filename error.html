@@ -1,19 +1,50 @@
-<!DOCTYPE html>
-<html>
 <head>
-<title>Error</title>
-<style>
-html { color-scheme: light dark; }
-body { width: 35em; margin: 0 auto;
-font-family: Tahoma, Verdana, Arial, sans-serif; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error Page</title>
+    <style>
+        body { background-color: rgb(32, 32, 32); font-family: sans-serif; margin: 2.5% 3% 2.5% 3%; text-align: center;}
+        #container{ border: 2px solid rgb(64,128,192); display: block;}
+        #error-name { color: white; font-size: 30px; margin: 0px; padding: 20px;}
+        #error-description { font-size: 20px; color: white;  margin: 0px; padding: 0px 20% 0px 20%; }
+        #button-1 { font-size: 20px;border-style: none; background-color: rgba(64,128,192, 0.6); color: white; margin: 20px; padding: 10px;}
+        #button-1:hover {background-color: rgb(64,128,192);}
+    </style>
 </head>
 <body>
-<h1>An error occurred.</h1>
-<p>Sorry, the page you are looking for is currently unavailable.<br/>
-Please try again later.</p>
-<p>If you are the system administrator of this resource then you should check
-the error log for details.</p>
-<p><em>Faithfully yours, nginx.</em></p>
+    <div id="container">
+        <p id="error-name"></p>
+        <p id="error-description"></p>
+        <button id="button-1" onclick = "goToIndexHtml()">Try Again</button>
+    </div>
+
+    <script>
+        function goToIndexHtml() { window.location.href = 'index.html'; }
+        async function fetchJson(){
+            try {
+                const response = await fetch('errors.json');
+                if (!response.ok) 
+                    throw new Error(response.statusText);
+                    
+                return await response.json();
+            } catch (error) { console.error(error); }
+        }
+        async function initErrorPage(){
+            const url = new URL(window.location.href);
+            const params = new URLSearchParams(url.search);
+            const status = params.get('status');
+                      
+            const errors = await fetchJson();
+            for(error in errors){
+                if(parseInt(error) === parseInt(status)){
+                    document.getElementById('error-name').textContent = `${error} ${errors[error].name}`;
+                    document.getElementById('error-description').textContent = `Description: ${errors[error].description}`;
+                }
+            }
+
+        }
+
+        initErrorPage();
+    </script>
 </body>
 </html>

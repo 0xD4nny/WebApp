@@ -1,0 +1,202 @@
+{
+    "400": {
+        "name": "Bad Request",
+        "description": "The server could not understand the request due to invalid syntax. This typically occurs when the client sends malformed or illegal request parameters.",
+        "example": "HTTP/1.1 400 Bad Request"
+    },
+    "401": {
+        "name": "Unauthorized",
+        "description": "The client must authenticate itself to get the requested response. This usually happens when the client does not provide proper authentication credentials.",
+        "example": "HTTP/1.1 401 Unauthorized"
+    },
+    "402": {
+        "name": "Payment Required",
+        "description": "This response code is reserved for future use. It was initially intended for digital payment systems.",
+        "example": "HTTP/1.1 402 Payment Required"
+    },
+    "403": {
+        "name": "Forbidden",
+        "description": "The client does not have access rights to the content. This is often due to permissions settings on the server.",
+        "example": "HTTP/1.1 403 Forbidden"
+    },
+    "404": {
+        "name": "Not Found",
+        "description": "The server can not find the requested resource. This typically occurs when the requested URL does not exist on the server.",
+        "example": "HTTP/1.1 404 Not Found"
+    },
+    "405": {
+        "name": "Method Not Allowed",
+        "description": "The request method is known by the server but has been disabled and cannot be used. This occurs when the HTTP method is not supported for the requested resource.",
+        "example": "HTTP/1.1 405 Method Not Allowed"
+    },
+    "406": {
+        "name": "Not Acceptable",
+        "description": "The server cannot produce a response matching the list of acceptable values defined in the request's proactive content negotiation headers.",
+        "example": "HTTP/1.1 406 Not Acceptable"
+    },
+    "407": {
+        "name": "Proxy Authentication Required",
+        "description": "The client must first authenticate itself with the proxy. This error indicates that the proxy requires authentication.",
+        "example": "HTTP/1.1 407 Proxy Authentication Required"
+    },
+    "408": {
+        "name": "Request Timeout",
+        "description": "The server would like to shut down this unused connection. This occurs when the client does not produce a request within the server's timeout period.",
+        "example": "HTTP/1.1 408 Request Timeout"
+    },
+    "409": {
+        "name": "Conflict",
+        "description": "This response is sent when a request conflicts with the current state of the server. It often occurs in situations where resource states are inconsistent.",
+        "example": "HTTP/1.1 409 Conflict"
+    },
+    "410": {
+        "name": "Gone",
+        "description": "The content requested has been permanently deleted from the server, with no forwarding address. This indicates that the resource is no longer available and will not be available again.",
+        "example": "HTTP/1.1 410 Gone"
+    },
+    "411": {
+        "name": "Length Required",
+        "description": "The server rejects the request because the Content-Length header field is not defined and the server requires it. This typically occurs when the client does not specify the length of the body.",
+        "example": "HTTP/1.1 411 Length Required"
+    },
+    "412": {
+        "name": "Precondition Failed",
+        "description": "The client has indicated preconditions in its headers which the server does not meet. This usually happens when the request conditions are not met.",
+        "example": "HTTP/1.1 412 Precondition Failed"
+    },
+    "413": {
+        "name": "Payload Too Large",
+        "description": "Request entity is larger than limits defined by server. This occurs when the client sends data that is too large for the server to process.",
+        "example": "HTTP/1.1 413 Payload Too Large"
+    },
+    "414": {
+        "name": "URI Too Long",
+        "description": "The URI requested by the client is longer than the server is willing to interpret. This usually happens when the URL exceeds the server's limit.",
+        "example": "HTTP/1.1 414 URI Too Long"
+    },
+    "415": {
+        "name": "Unsupported Media Type",
+        "description": "The media format of the requested data is not supported by the server. This occurs when the client sends data in a format that the server cannot process.",
+        "example": "HTTP/1.1 415 Unsupported Media Type"
+    },
+    "416": {
+        "name": "Range Not Satisfiable",
+        "description": "The range specified by the Range header field in the request cannot be fulfilled. This occurs when the specified range is not valid.",
+        "example": "HTTP/1.1 416 Range Not Satisfiable"
+    },
+    "417": {
+        "name": "Expectation Failed",
+        "description": "The expectation given in the request's Expect header could not be met. This indicates that the server could not meet the expectation given in the request.",
+        "example": "HTTP/1.1 417 Expectation Failed"
+    },
+    "418": {
+        "name": "I'm a teapot",
+        "description": "The server refuses the attempt to brew coffee with a teapot. This is a humorous response defined by RFC 2324.",
+        "example": "HTTP/1.1 418 I'm a teapot"
+    },
+    "421": {
+        "name": "Misdirected Request",
+        "description": "The request was directed at a server that is not able to produce a response. This typically occurs when the request is sent to an incorrect server endpoint.",
+        "example": "HTTP/1.1 421 Misdirected Request"
+    },
+    "422": {
+        "name": "Unprocessable Entity",
+        "description": "The request was well-formed but was unable to be followed due to semantic errors. This typically happens when the server understands the request but cannot process it.",
+        "example": "HTTP/1.1 422 Unprocessable Entity"
+    },
+    "423": {
+        "name": "Locked",
+        "description": "The resource being accessed is locked. This occurs when the resource is currently unavailable due to being locked by another process.",
+        "example": "HTTP/1.1 423 Locked"
+    },
+    "424": {
+        "name": "Failed Dependency",
+        "description": "The request failed due to failure of a previous request. This typically happens when a request depends on another request and that request fails.",
+        "example": "HTTP/1.1 424 Failed Dependency"
+    },
+    "425": {
+        "name": "Too Early",
+        "description": "Indicates that the server is unwilling to risk processing a request that might be replayed. This is a response code that can be used to indicate that the client should try again later.",
+        "example": "HTTP/1.1 425 Too Early"
+    },
+    "426": {
+        "name": "Upgrade Required",
+        "description": "The client should switch to a different protocol such as TLS/1.0. This indicates that the client needs to upgrade to a different protocol to proceed.",
+        "example": "HTTP/1.1 426 Upgrade Required"
+    },
+    "428": {
+        "name": "Precondition Required",
+        "description": "The origin server requires the request to be conditional. This occurs when the request does not meet the server's preconditions.",
+        "example": "HTTP/1.1 428 Precondition Required"
+    },
+    "429": {
+        "name": "Too Many Requests",
+        "description": "The user has sent too many requests in a given amount of time. This typically happens when the client is rate-limited by the server.",
+        "example": "HTTP/1.1 429 Too Many Requests"
+    },
+    "431": {
+        "name": "Request Header Fields Too Large",
+        "description": "The server is unwilling to process the request because its header fields are too large. This occurs when the headers of the request exceed the server's limit.",
+        "example": "HTTP/1.1 431 Request Header Fields Too Large"
+    },
+    "451": {
+        "name": "Unavailable For Legal Reasons",
+        "description": "The user-agent requested a resource that cannot legally be provided. This is used when access to a resource is denied for legal reasons.",
+        "example": "HTTP/1.1 451 Unavailable For Legal Reasons"
+    },
+    "500": {
+        "name": "Internal Server Error",
+        "description": "The server has encountered a situation it doesn't know how to handle. This is a generic error message for server issues.",
+        "example": "HTTP/1.1 500 Internal Server Error"
+    },
+    "501": {
+        "name": "Not Implemented",
+        "description": "The server does not support the functionality required to fulfill the request. This typically occurs when the server lacks the capability to process the requested method (e.g., GET, POST, PUT).",
+        "example": "HTTP/1.1 501 Not Implemented"
+    },
+    "502": {
+        "name": "Bad Gateway",
+        "description": "The server, while acting as a gateway or proxy, received an invalid response from the upstream server. This usually occurs when the server is unable to get a valid response from the upstream server.",
+        "example": "HTTP/1.1 502 Bad Gateway"
+    },
+    "503": {
+        "name": "Service Unavailable",
+        "description": "The server is not ready to handle the request. Common causes are a server that is down for maintenance or that is overloaded. This typically occurs when the server is temporarily unable to handle requests.",
+        "example": "HTTP/1.1 503 Service Unavailable"
+    },
+    "504": {
+        "name": "Gateway Timeout",
+        "description": "The server, while acting as a gateway or proxy, did not receive a timely response from the upstream server. This usually occurs when the upstream server is taking too long to respond.",
+        "example": "HTTP/1.1 504 Gateway Timeout"
+    },
+    "505": {
+        "name": "HTTP Version Not Supported",
+        "description": "The HTTP version used in the request is not supported by the server. This typically occurs when the server does not support the HTTP protocol version used in the request.",
+        "example": "HTTP/1.1 505 HTTP Version Not Supported"
+    },
+    "506": {
+        "name": "Variant Also Negotiates",
+        "description": "The server has an internal configuration error: the chosen variant resource is itself configured to engage in transparent content negotiation. This usually occurs when the server is misconfigured.",
+        "example": "HTTP/1.1 506 Variant Also Negotiates"
+    },
+    "507": {
+        "name": "Insufficient Storage",
+        "description": "The server is unable to store the representation needed to complete the request. This usually occurs when the server runs out of storage space.",
+        "example": "HTTP/1.1 507 Insufficient Storage"
+    },
+    "508": {
+        "name": "Loop Detected",
+        "description": "The server detected an infinite loop while processing a request with 'Depth: infinity'. This typically occurs when the server encounters a circular reference.",
+        "example": "HTTP/1.1 508 Loop Detected"
+    },
+    "510": {
+        "name": "Not Extended",
+        "description": "Further extensions to the request are required for the server to fulfill it. This usually occurs when the server needs additional extensions to process the request.",
+        "example": "HTTP/1.1 510 Not Extended"
+    },
+    "511": {
+        "name": "Network Authentication Required",
+        "description": "The client needs to authenticate to gain network access. This usually occurs when the client needs to authenticate to a network proxy or gateway.",
+        "example": "HTTP/1.1 511 Network Authentication Required"
+    }
+}
