@@ -58,7 +58,7 @@ Dieses Bild muss heruntergeladen und an der entsprechenden Stelle eingezeichnet 
 </ul>
 
 <h3><u>Implementierung der Übersicht</u></h3>
-<img src="https://github.com/user-attachments/assets/f0cf11ae-f3eb-4e6b-91af-1cd98fe8a2c3.png" alt="readMe.png">
+![ProjectImg](https://github.com/user-attachments/readMe.png)
 
 <p><br>Wie im Beispielbild zu erkennen ist, habe ich mich für eine Kachel-Ansicht entschieden.<br>
 Statische Kachel: Stellt die Systemdaten dar. Diese wird einmalig erstellt.<br>
