@@ -86,8 +86,8 @@ Dieses Bild muss heruntergeladen und an der entsprechenden Stelle eingezeichnet 
 <h3><u>Besondere Herausforderungen</u></h3>
 <p>Eine besondere Herausforderung stellte die JSON-Struktur der API dar. Es gab keine einfache Hierarchie, sondern eine Mischung aus Objekten, Wrapper Objekten und Top-Level Key-Value-Pairs. <br>
 Um dieses Problem zu lösen, entwickelte ich zwei Hilfsmethoden: Die erste erkennt Wrapper-Objekte und sammelt alle enthaltenen Objekte in einem Array, die zweite sammelt alle Top-Level KVPs. <br>
-Dadurch konnte ich jede JSON (ohne Arrays) generisch in die Tabellen der statische Kachel einlesen und darstellen.</p>
+Dadurch konnte jede JSON (ohne Arrays) generisch in die Tabellen der statische Kachel einlesen und darstellen werden.</p>
 
 <h3><u>Fehlerbehandlung</u></h3>
-<p>Sollte es beim Fetch zu einem Fehler zurückkommen, wird eine spezielle Fehlerseite angezeigt, die den Fehlercode aus der URL liest und eine Beschreibung dazu aus einer Json-Datei anzeigt.<br>
+<p>Sollte beim fetchen ein Fehler zurückkommen, wird eine spezielle Fehlerseite angezeigt, die den Fehlercode aus der URL liest und eine Beschreibung dazu aus einer Json-Datei anzeigt.<br>
 Die Seite bietet auch einen Button, mit dem man zurück zur index.html kommen soll, in der dann wieder die Übersicht angezeigt wird, sofern der Fetch, bei dem Versuch erfolgreich ist.</p>
