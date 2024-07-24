@@ -5,9 +5,9 @@
 Diese Übungsaufgabe dient dazu, mein Wissen und meine Fähigkeiten im Umgang mit Webtechnologien zu vertiefen.</p>
 
 <h3><u>Projektbeschreibung</u></h3>
-<p>Die Webseite ermöglicht es dem Benutzer gezielt und einfach Daten der API abzufragen.
+<p>Die Webseite ermöglicht es dem Benutzer, gezielt und einfach Daten der API abzufragen.
 Ich habe mich für eine Kachelansicht entschieden, in der sich jeder Benutzer, einfach zurechtfinden sollte.
-In der obersten Kachel befindet sich eine Übersicht der Systemdaten, welche die API eingesammelt hat und zurückgibt. Zum ein und ausklappen, kann der Toogle-Button genutzt werden.
+In der obersten Kachel befindet sich eine Übersicht der Systemdaten, welche die API eingesammelt hat und zurückgibt. Zum ein- und ausklappen, kann der Toggle-Button genutzt werden.
 Des Weiteren, werden Pro angeschlossenem Monitor des Systems, generisch Kacheln erzeugt, welche ein Bild des jeweiligen Monitors als Vorschau in sich hält.
 Dadurch kann der Benutzer sich den gewünschten Stream auswählen und landet per Klick auf die Kachel im richtigen Stream.
 Der Stream wird im Vollbild-Modus angezeigt, und durch einen Klick auf den Stream, landet der Benutzer wieder in der Übersicht und der Vollbild-Modus wird beendet.
@@ -17,14 +17,14 @@ Der Stream wird im Vollbild-Modus angezeigt, und durch einen Klick auf den Strea
 <ul>
 <li><b>SCTX</b> ist eine integrierte Web-Anwendung, die Daten über das FastCGI-Protokoll bereitstellt. 
 Die API sendet verschiedene Events mit Parametern, die von unserer Anwendung verarbeitet werden müssen.</li>
-<li><b>Html, Css, Java-Script</b>, ohne zusätzliche Frameworks oder Bibliotheken.</li>
+<li><b>HTML, CSS, JavaScript</b>, ohne zusätzliche Frameworks oder Bibliotheken.</li>
 <li><b>Nginx</b> (Webserver)</li>
 </ul>
 
 <h3><u>Aufgabenstellung</u></h3>
 <ul>
 <li>Wenn die Webseite unter 127.0.0.1 aufgerufen wird, soll eine Übersichtsseite erscheinen, welche Systemdaten und eine kleine Stream-Vorschau für jeden Monitor darstellt.</li>
-<li>Mann soll durch die Übersichts-Seite einen Stream wählen können und dann automatisch in den Fullscreen wechseln, in dem dann der Stream angezeigt wird.</li>
+<li>Man soll durch die Übersichts-Seite einen Stream wählen können und dann automatisch in den Fullscreen wechseln, in dem dann der Stream angezeigt wird.</li>
 <li>Systemdaten wie RAM kommen in Bytes von der API und müssen entsprechend auf eine sinnvolle Einheit umgerechnet werden, der entsprechende Postfix soll hinzugefügt werden.</li>
 <li>Sollte die API einen 410 Error zurückgeben, muss die Übersichtsseite gelöscht und der Fehler entsprechend anzeigezeigt werden.</li>
 </ul>
@@ -53,7 +53,7 @@ fetch('/api/select.sctx', { method: 'POST', body: `session=${session}&stream=${(
 fetch('/api/event.sctx', { method: 'POST', body: `session=${session}` });
 ```
 
-<p>Lifert die folgenden Events, mit den ensprechenden Paramentern.
+<p>Liefert die folgenden Events, mit den ensprechenden Paramentern.
 
 <h3><u>Events</u></h3>
 <ul>
@@ -68,15 +68,15 @@ Dieses Bild muss heruntergeladen und an der entsprechenden Stelle eingezeichnet 
 <p>event kann mehrere Events auf einmal übermitteln. Links, die event zur Verfügung stellt sind mindestens 5 Sekunden lang' gültig und resultieren danach in einem 404-Fehler.</p>
 
 <h3><u>Implementierung der Übersicht</u></h3>
-<p>Wie bereits erwähnt und im Beispielbild zu erkennen ist, habe ich mich für eine Kachelansicht entschieden. Die statische Kachel enthält HTML-Tabellen, die dieselbe Anordnung wie die dynamischen Kacheln haben. Dies sorgt für eine ästhetische und symmetrische Darstellung, besonders wenn die Anzahl der Kacheln ein gleichmäßiges Grid ergibt, wie im Beispiel: 8 Tabellen in zwei Reihen zu je 4 Tabellen.</p>
+<p>Wie bereits erwähnt und im Beispielbild zu erkennen ist, habe ich mich für eine Kachelansicht entschieden. Die statische Kachel enthält HTML-Tabellen, die dieselbe Anordnung wie die dynamischen Kacheln haben. Dies sorgt für eine ästhetische und Symmetrische Darstellung, besonders wenn die Anzahl der Kacheln ein gleichmäßiges Grid ergibt, wie im Beispiel: 8 Tabellen in zwei Reihen zu je 4 Tabellen.</p>
  <b>Statische Kachel:</b> Stellt die Systemdaten dar. Diese wird einmalig erstellt.<br>
 <b>Dynamische Kachel:</b> Für jeden Monitor wird eine dynamische Kachel erstellt, die alle 5 Sekunden per Intervall aktualisiert wird.<br>
 
 <h3><u>Implementierung des Streams</u></h3>
-<p>Beim Klick auf eine dynamische Kachel, wird die Übersicht ausgeblendet und der Vollbildmodus aktiviert. Zur Anzeige des Streams nutzen wir 3 Canvas Elemente.</p>
+<p>Beim Klick auf eine dynamische Kachel, wird die Übersicht ausgeblendet und der Vollbildmodus aktiviert. Zur Anzeige des Streams nutzen wir 3 Canvas-Elemente.</p>
 <ul>
 <li>Overlay-Canvas: Zeigt den Mauszeiger an, damit dieser immer oben liegt und flüssiger läuft, haben wir hier ein eigenes Canvas, nur dafür.</li>
-<li>Buffer-Canvas: Damit wir nicht jedes 80x80px Image einzeln auf die Webseite gezeichnet werden muss, schreiben wir alle Image-Fragmente eines Responses in einen Buffer.</li>
+<li>Buffer-Canvas: Damit wir nicht jedes 80x80px Image einzeln auf die Webseite gezeichnet werden muss, schreiben wir alle Image-Fragmente eines Response in einen Buffer.</li>
 <li>Stream-Canvas: Nachdem wir die Image-Fragmente des Responses im Buffer-Canvas gesammelt haben, übertragen wir den gesamten Buffer in das Stream-Canvas.</li>
 </ul>
 <p>So können wir den gesamten Response (5-15 Image Fragmente) mit nur einem Zeichenbefehl zeichnen.</p>
