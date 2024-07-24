@@ -72,6 +72,8 @@ Dieses Bild muss heruntergeladen und an der entsprechenden Stelle eingezeichnet 
  <b>Statische Kachel:</b> Stellt die Systemdaten dar. Diese wird einmalig erstellt.<br>
 <b>Dynamische Kachel:</b> Für jeden Monitor wird eine dynamische Kachel erstellt, die alle 5 Sekunden per Intervall aktualisiert wird.<br>
 
+![readme](https://github.com/user-attachments/assets/51cf1e1c-3f9a-4b80-82e5-46ebe2157d99)
+
 <h3><u>Implementierung des Streams</u></h3>
 <p>Beim Klick auf eine dynamische Kachel, wird die Übersicht ausgeblendet und der Vollbildmodus aktiviert. Zur Anzeige des Streams nutzen wir 3 Canvas-Elemente.</p>
 <ul>
