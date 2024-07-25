@@ -78,7 +78,7 @@ Dieses Bild muss heruntergeladen und an der entsprechenden Stelle eingezeichnet 
 <p>Beim Klick auf eine dynamische Kachel, wird die Übersicht ausgeblendet und der Vollbildmodus aktiviert. Zur Anzeige des Streams nutzen wir 3 Canvas-Elemente.</p>
 <ul>
 <li>Overlay-Canvas: Zeigt den Mauszeiger an, damit dieser immer oben liegt und flüssiger läuft, haben wir hier ein eigenes Canvas, nur dafür.</li>
-<li>Buffer-Canvas: Damit wir nicht jedes 80x80px Image einzeln auf die Webseite gezeichnet werden muss, schreiben wir alle Image-Fragmente eines Response in einen Buffer.</li>
+<li>Buffer-Canvas: Damit wir nicht jedes 80x80px Image einzeln auf die Webseite zeichnen müssen, schreiben wir alle Image-Fragmente eines Response zuerst in einen Buffer.</li>
 <li>Stream-Canvas: Nachdem wir die Image-Fragmente des Responses im Buffer-Canvas gesammelt haben, übertragen wir den gesamten Buffer in das Stream-Canvas.</li>
 </ul>
 <p>So können wir den gesamten Response (5-15 Image Fragmente) mit nur einem Zeichenbefehl zeichnen.</p>
